@@ -7,8 +7,10 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "@mathieuc/tradingview": "^3.5.2",
     "axios": "^1.12.2",
     "chart.js": "^4.5.1",
+    "lightweight-charts": "^5.0.9",
     "vue": "^3.2.13"
   },
   "devDependencies": {

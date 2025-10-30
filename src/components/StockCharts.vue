@@ -1,7 +1,3 @@
-
-
-
-<!-- Hier beginnt die HTML - Bearbeitung -->
 <template xmlns="http://www.w3.org/1999/html">
 
   <div class="all">
@@ -29,7 +25,7 @@
     </div>
 
     <div class="last">
-    <h3 style="margin-top:12px;">Letzten Preise:</h3>
+      <h3 style="margin-top:12px;">Letzten Preise:</h3>
       <ul>
         <li v-for="(entry, index) in lastPrices" :key="index">
           {{ entry.date ? formatDate(entry.date) : '-' }} —
@@ -94,22 +90,22 @@ export default {
         else if (Array.isArray(data?.data)) rows = data.data;
         else if (Array.isArray(data?.results)) rows = data.results;
         else if (
-          Array.isArray(data?.historicalStockList) &&
-          data.historicalStockList.length > 0 &&
-          Array.isArray(data.historicalStockList[0]?.historical)
+            Array.isArray(data?.historicalStockList) &&
+            data.historicalStockList.length > 0 &&
+            Array.isArray(data.historicalStockList[0]?.historical)
         ) {
           rows = data.historicalStockList[0].historical;
         } else if (Array.isArray(data)) rows = data;
 
         // Normalisieren auf {date, close}
         const norm = rows
-          .map((p) => {
-            const date = p.date || p.formattedDate || p.datetime || p.label || p.timestamp || null;
-            const raw = p.close ?? p.adjClose ?? p.price ?? p.value ?? null;
-            const close = typeof raw === 'string' ? parseFloat(raw.replace(',', '.')) : raw;
-            return { date, close };
-          })
-          .filter((p) => p.date && typeof p.close === 'number' && !Number.isNaN(p.close));
+            .map((p) => {
+              const date = p.date || p.formattedDate || p.datetime || p.label || p.timestamp || null;
+              const raw = p.close ?? p.adjClose ?? p.price ?? p.value ?? null;
+              const close = typeof raw === 'string' ? parseFloat(raw.replace(',', '.')) : raw;
+              return { date, close };
+            })
+            .filter((p) => p.date && typeof p.close === 'number' && !Number.isNaN(p.close));
 
         if (!norm.length) {
           throw new Error(`Keine Kursdaten erhalten (Symbol: ${sym}).`);
@@ -260,14 +256,14 @@ export default {
   justify-content: center;  /* zentriert alles zusammen */
   position: relative;       /* erlaubt absolute Positionierung vom Logo */
   height: 500px;
-  }
+}
 
 .chart {position: relative; width: 500px; height: 300px;z-index: 1}
 
 .search {margin: 12px 0; gap:8px; align-items:center;z-index: 2}
 
 .background { background-image:url("../assets/R.png");position:absolute; inset: 0; background-repeat:no-repeat;
-              background-size: cover;background-attachment: scroll;opacity: 0.6;z-index: -1; background-color: black }
+  background-size: cover;background-attachment: scroll;opacity: 0.6;z-index: -1; background-color: black }
 
 img {margin-right: 10px}
 
