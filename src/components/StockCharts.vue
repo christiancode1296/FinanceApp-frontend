@@ -4,7 +4,7 @@
 
     <div class="header">
       <img  src="../assets/R.png" style="width: 150px; height: 150px;" />
-      <h1 id="ueber">Capital Investments</h1>
+      <h1 id="ueber">FinanceApp by Rami and Christian | 2025 </h1>
     </div>
 
     <div class="background"></div>
@@ -261,9 +261,6 @@ export default {
 .chart {position: relative; width: 500px; height: 300px;z-index: 1}
 
 .search {margin: 12px 0; gap:8px; align-items:center;z-index: 2}
-
-.background { background-image:url("../assets/R.png");position:absolute; inset: 0; background-repeat:no-repeat;
-  background-size: cover;background-attachment: scroll;opacity: 0.6;z-index: -1; background-color: black }
 
 img {margin-right: 10px}
 
