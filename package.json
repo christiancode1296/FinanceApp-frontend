@@ -1,5 +1,5 @@
 {
-  "name": "FinanceApp-frontend-nuxt",
+  "name": "FinanceApp-frontend",
   "type": "module",
   "private": true,
   "scripts": {
@@ -7,17 +7,24 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "tailwind:init": "tailwindcss init -p"
   },
   "dependencies": {
+    "@nuxt/ui": "^4.1.0",
     "axios": "^1.13.1",
     "chart.js": "^4.5.1",
     "nuxt": "^4.2.0",
+    "nuxt-charts": "^1.0.2",
     "vue": "^3.5.22",
     "vue-chartjs": "^5.3.2",
     "vue-router": "^4.6.3"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.16",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.16",
     "vite-tsconfig-paths": "^5.1.4"
   }
 }

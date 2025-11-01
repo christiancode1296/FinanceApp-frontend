@@ -13,9 +13,9 @@
       <h2>Wertentwicklung Amerikanische Aktie</h2>
       <label>
         Ticker-Symbol
-        <input v-model.trim="symbol" @keyup.enter="reload()" placeholder="AAPL" />
+        <UInput v-model.trim="symbol" @keyup.enter="reload()" placeholder="AAPL" />
       </label>
-      <button @click="reload()" :disabled="loading">Laden</button>
+      <UButton @click="reload()" :disabled="loading">Laden</UButton>
       <span v-if="loading">lädt…</span>
       <span v-if="errorMsg" style="color:#b00;">{{ errorMsg }}</span>
     </div>
