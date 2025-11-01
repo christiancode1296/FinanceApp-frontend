@@ -10,9 +10,9 @@
     <div class="background"></div>
 
     <div class="search">
-      <h2>Stocks Charts</h2>
+      <h2>Wertentwicklung Amerikanische Aktie</h2>
       <label>
-        Symbol:
+        Ticker-Symbol
         <input v-model.trim="symbol" @keyup.enter="reload()" placeholder="AAPL" />
       </label>
       <button @click="reload()" :disabled="loading">Laden</button>
@@ -25,7 +25,7 @@
     </div>
 
     <div class="last">
-      <h3 style="margin-top:12px;">Letzten Preise:</h3>
+      <h3 style="margin-top:12px;">Schlusskurse der letzten 5 Tage :</h3>
       <ul>
         <li v-for="(entry, index) in lastPrices" :key="index">
           {{ entry.date ? formatDate(entry.date) : '-' }} —
@@ -62,11 +62,11 @@ export default {
         Chart,
         LineController, LineElement, PointElement,
         LinearScale, CategoryScale,
-        Tooltip, Legend,
+        Tooltip, Legend, Filler
       } = ChartJS;
       Chart.register(
           LineController, LineElement, PointElement,
-          LinearScale, CategoryScale, Tooltip, Legend
+          LinearScale, CategoryScale, Tooltip, Legend, Filler
       );
       return Chart;
     };
@@ -79,7 +79,7 @@ export default {
       errorMsg.value = "";
       try {
         // Frontend ruft dein Backend an (Proxy). KEIN direkter FMP-Call
-        const url = `/api/stocks/${encodeURIComponent(sym)}`;
+        const url = `http://localhost:8080/api/stocks/${encodeURIComponent(sym)}`;
         const res = await fetch(url, { signal: abortController.signal });
         if (!res.ok) throw new Error(`${sym}: HTTP ${res.status}`);
         const data = await res.json();
@@ -113,7 +113,7 @@ export default {
 
         // Aufsteigend sortieren und auf 180 Tage begrenzen
         norm.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0));
-        const series = norm.slice(-180);
+        const series = norm.slice(-360);
 
         // Labels/Werte erzeugen
         const labels = series.map((p) => p.date);
@@ -258,7 +258,7 @@ export default {
   height: 500px;
 }
 
-.chart {position: relative; width: 500px; height: 300px;z-index: 1}
+.chart {position: relative; width: 1200px; height: 300px;z-index: 1}
 
 .search {margin: 12px 0; gap:8px; align-items:center;z-index: 2}
 
