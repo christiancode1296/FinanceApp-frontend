@@ -8,6 +8,10 @@
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
 
+definePageMeta({
+  layout: 'default'
+})
+
 const stocks = ref([])
 const apiUrl = useRuntimeConfig().public.API_URL
 

@@ -1,6 +1,6 @@
-/// <reference types="@nuxt/telemetry" />
 /// <reference types="@nuxt/ui" />
 /// <reference types="nuxt-charts" />
+/// <reference types="@nuxt/telemetry" />
 /// <reference types="@nuxt/devtools" />
 /// <reference path="types/builder-env.d.ts" />
 /// <reference path="types/plugins.d.ts" />

@@ -14,8 +14,10 @@ type HydrationStrategies = {
 type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }> & T
 
 
+export const Login: typeof import("../components/Login.vue")['default']
 export const StockCharts: typeof import("../components/StockCharts.vue")['default']
 export const Test: typeof import("../components/Test.vue")['default']
+export const Watchlist: typeof import("../components/Watchlist.vue")['default']
 export const UColorModeAvatarDVue: typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.d.vue")['default']
 export const UColorModeAvatar: typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue")['default']
 export const UColorModeButtonDVue: typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeButton.d.vue")['default']
@@ -272,8 +274,10 @@ export const Head: typeof import("../node_modules/.pnpm/nuxt@4.2.0_@parcel+watch
 export const Html: typeof import("../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_ioredis@5.8.2_light_8a43c0918c636c61c526a19e6ad1df07/node_modules/nuxt/dist/head/runtime/components")['Html']
 export const Body: typeof import("../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_ioredis@5.8.2_light_8a43c0918c636c61c526a19e6ad1df07/node_modules/nuxt/dist/head/runtime/components")['Body']
 export const NuxtIsland: typeof import("../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_ioredis@5.8.2_light_8a43c0918c636c61c526a19e6ad1df07/node_modules/nuxt/dist/app/components/nuxt-island")['default']
+export const LazyLogin: LazyComponent<typeof import("../components/Login.vue")['default']>
 export const LazyStockCharts: LazyComponent<typeof import("../components/StockCharts.vue")['default']>
 export const LazyTest: LazyComponent<typeof import("../components/Test.vue")['default']>
+export const LazyWatchlist: LazyComponent<typeof import("../components/Watchlist.vue")['default']>
 export const LazyUColorModeAvatarDVue: LazyComponent<typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.d.vue")['default']>
 export const LazyUColorModeAvatar: LazyComponent<typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue")['default']>
 export const LazyUColorModeButtonDVue: LazyComponent<typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeButton.d.vue")['default']>
