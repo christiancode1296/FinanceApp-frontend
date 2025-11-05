@@ -27,12 +27,12 @@ import { SourceMapConsumer } from 'file:///Users/christianpuschel/Webtech/Financ
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { stringify, uneval } from 'file:///Users/christianpuschel/Webtech/FinanceApp-frontend/node_modules/devalue/index.js';
 import { captureRawStackTrace, parseRawStackTrace } from 'file:///Users/christianpuschel/Webtech/FinanceApp-frontend/node_modules/errx/dist/index.js';
-import { isVNode, toValue, isRef } from 'file:///Users/christianpuschel/Webtech/FinanceApp-frontend/node_modules/.pnpm/vue@3.5.22_typescript@5.9.3/node_modules/vue/index.mjs';
+import { isVNode, toValue, isRef } from 'file:///Users/christianpuschel/Webtech/FinanceApp-frontend/node_modules/vue/index.mjs';
 import { promises } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname as dirname$1, resolve as resolve$1, basename } from 'file:///Users/christianpuschel/Webtech/FinanceApp-frontend/node_modules/pathe/dist/index.mjs';
 import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:///Users/christianpuschel/Webtech/FinanceApp-frontend/node_modules/unhead/dist/server.mjs';
-import { renderToString } from 'file:///Users/christianpuschel/Webtech/FinanceApp-frontend/node_modules/.pnpm/vue@3.5.22_typescript@5.9.3/node_modules/vue/server-renderer/index.mjs';
+import { renderToString } from 'file:///Users/christianpuschel/Webtech/FinanceApp-frontend/node_modules/vue/server-renderer/index.mjs';
 import { walkResolver } from 'file:///Users/christianpuschel/Webtech/FinanceApp-frontend/node_modules/unhead/dist/utils.mjs';
 import { getIcons } from 'file:///Users/christianpuschel/Webtech/FinanceApp-frontend/node_modules/@iconify/utils/lib/index.js';
 import { collections } from 'file:///Users/christianpuschel/Webtech/FinanceApp-frontend/.nuxt/nuxt-icon-server-bundle.mjs';

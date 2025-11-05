@@ -98,16 +98,17 @@ const loadChartJs = async () => {
 const fetchSeries = async (sym) => {
   if (abortController) abortController.abort()
   abortController = new AbortController()
-
   loading.value = true
   errorMsg.value = ""
 
   try {
-    const url = `http://localhost:8080/api/stocks/${encodeURIComponent(sym)}`
+    // Runtime Config nutzen statt hart-codiert localhost
+    const config = useRuntimeConfig()
+    const apiUrl = config.public.API_URL || 'http://localhost:8080'
+    const url = `${apiUrl}/api/stocks/${encodeURIComponent(sym)}`
+
     const res = await fetch(url, { signal: abortController.signal })
-
     if (!res.ok) throw new Error(`${sym}: HTTP ${res.status}`)
-
     const data = await res.json()
 
     let rows = []
@@ -137,7 +138,6 @@ const fetchSeries = async (sym) => {
 
     norm.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
     const series = norm.slice(-360)
-
     const labels = series.map((p) => p.date)
     const values = series.map((p) => p.close)
 
@@ -151,6 +151,7 @@ const fetchSeries = async (sym) => {
     loading.value = false
   }
 }
+
 
 const formatDate = (yyyyMmDd) => {
   if (!yyyyMmDd) return "-"
