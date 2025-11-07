@@ -2,37 +2,56 @@
   <div class="space-y-6">
 
     <!-- Search Section -->
+    <!-- Search Section -->
     <UCard>
+      <div class="flex flex-col gap-2">
 
-
-      <div class="flex gap-3 items-end">
-        <UFormGroup label="Ticker-Symbol" class="flex-1">
+        <!-- Sucheingabe -->
+        <UFormGroup label="Aktie suchen" class="flex-1">
           <UInput
-              v-model.trim="symbol"
-              @keyup.enter="reload()"
-              placeholder="AAPL"
+              v-model.trim="searchQuery"
+              @input="searchStocks"
+              placeholder="Name oder Kürzel (z. B. Apple, Tesla...)"
               size="lg"
           />
         </UFormGroup>
 
+        <!-- Vorschläge (Auto-Complete) -->
+        <div
+            v-if="suggestions.length > 0"
+            class="border rounded bg-white dark:bg-gray-800 shadow-md max-h-60 overflow-y-auto"
+        >
+          <div
+              v-for="s in suggestions"
+              :key="s.symbol"
+              @click="selectSymbol(s)"
+              class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            {{ s.name }} ({{ s.symbol }}) – {{ s.exchangeShortName }}
+          </div>
+        </div>
+
+        <!-- Button -->
         <UButton
             @click="reload()"
             :loading="loading"
             size="lg"
             icon="i-lucide-refresh-cw"
+            class="mt-2"
         >
           Laden
         </UButton>
-      </div>
 
-      <UAlert
-          v-if="errorMsg"
-          color="red"
-          variant="soft"
-          :title="errorMsg"
-          class="mt-4"
-      />
+        <UAlert
+            v-if="errorMsg"
+            color="red"
+            variant="soft"
+            :title="errorMsg"
+            class="mt-4"
+        />
+      </div>
     </UCard>
+
 
     <!-- Chart -->
     <UCard>
@@ -74,6 +93,34 @@ const chartCanvas = ref(null)
 const errorMsg = ref("")
 const loading = ref(false)
 const lastPrices = ref([])
+const searchQuery = ref('')
+const suggestions = ref([])
+
+// Auto-Complete Suchfunktion
+const searchStocks = async () => {
+  if (searchQuery.value.length < 2) {
+    suggestions.value = []
+    return
+  }
+
+  try {
+    const config = useRuntimeConfig()
+    const apiUrl = config.public.API_URL || 'http://localhost:8080'
+    const res = await fetch(`${apiUrl}/api/stocks/search?query=${encodeURIComponent(searchQuery.value)}`)
+    const data = await res.json()
+    suggestions.value = Array.isArray(data) ? data.slice(0, 10) : []
+  } catch (err) {
+    console.error('Fehler bei der Suche:', err)
+  }
+}
+
+// Wenn ein Vorschlag geklickt wird:
+const selectSymbol = (s) => {
+  symbol.value = s.symbol
+  searchQuery.value = s.name
+  suggestions.value = []
+  reload()
+}
 
 let chart
 let abortController
