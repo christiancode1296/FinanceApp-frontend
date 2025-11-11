@@ -41,7 +41,7 @@
         "../node_modules/@nuxt/schema"
       ],
       "nuxt": [
-        "../node_modules/nuxt"
+        "../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt"
       ],
       "vite/client": [
         "../node_modules/vite/client"
@@ -80,12 +80,12 @@
   ],
   "exclude": [
     "../node_modules",
-    "../node_modules/nuxt/node_modules",
-    "../node_modules/nuxt-charts/node_modules",
+    "../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/node_modules",
+    "../node_modules/.pnpm/nuxt-charts@1.0.2_magicast@0.5.1_vue@3.5.22_typescript@5.9.3_/node_modules/nuxt-charts/node_modules",
     "../node_modules/@nuxt/icon/node_modules",
     "../node_modules/@nuxt/fonts/node_modules",
     "../node_modules/@nuxtjs/color-mode/node_modules",
-    "../node_modules/@nuxt/ui/node_modules",
+    "../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/node_modules",
     "../node_modules/@nuxt/devtools/node_modules",
     "../node_modules/@nuxt/telemetry/node_modules",
     "../dist",
@@ -96,7 +96,11 @@
     "../modules/*/runtime/server/**/*",
     "../layers/*/server/**/*",
     "../layers/*/modules/*/runtime/server/**/*",
+    "../node_modules/.pnpm/nuxt-charts@1.0.2_magicast@0.5.1_vue@3.5.22_typescript@5.9.3_/node_modules/runtime",
+    "../node_modules/.pnpm/nuxt-charts@1.0.2_magicast@0.5.1_vue@3.5.22_typescript@5.9.3_/node_modules/dist/runtime",
     "../node_modules/runtime",
-    "../node_modules/dist/runtime"
+    "../node_modules/dist/runtime",
+    "../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/runtime",
+    "../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/dist/runtime"
   ]
 }
