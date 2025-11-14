@@ -3,17 +3,38 @@
 
     <!-- Search Section -->
     <UCard>
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-4">
 
         <!-- Sucheingabe -->
-        <UFormGroup label="Aktie suchen" class="flex-1">
-          <UInput
-              v-model.trim="searchQuery"
-              @input="searchStocks"
-              placeholder="Name oder Kürzel (z. B. Apple, Tesla...)"
-              size="lg"
-          />
-        </UFormGroup>
+        <div class = "flex gap-2" >
+          <UFormGroup label="Aktie suchen" class="flex-1">
+            <UInput
+                v-model.trim="searchQuery"
+                @input="searchStocks"
+                placeholder="Name"
+                size="lg"
+            />
+          </UFormGroup>
+          <div class="flex items-end">
+            <!-- Button -->
+            <UButton
+                @click="reload()"
+                :loading="loading"
+                size="lg"
+                    icon="i-lucide-refresh-cw"
+                class="mt-2"
+            >
+              Laden
+            </UButton>
+            <UButton
+                @click="currency = currency === 'USD' ? 'EUR' : 'USD'"
+                size="lg"
+                variant="soft"
+            >
+              {{ currency }}
+            </UButton>
+          </div>
+        </div>
 
         <!-- Vorschläge (Auto-Complete) -->
         <div
@@ -26,21 +47,9 @@
               @click="selectSymbol(s)"
               class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
           >
-            {{ s.name }} ({{ s.symbol }}) – {{ s.exchangeShortName }}
+            {{ s.name }} ({{ s.symbol }}) – {{ s.exchange || 'N/A' }}
           </div>
         </div>
-
-        <!-- Button -->
-        <UButton
-            @click="reload()"
-            :loading="loading"
-            size="lg"
-            icon="i-lucide-refresh-cw"
-            class="mt-2"
-        >
-          Laden
-        </UButton>
-
         <UAlert
             v-if="errorMsg"
             color="red"
@@ -54,6 +63,31 @@
 
     <!-- Chart -->
     <UCard>
+      <template #header>
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold">{{ currentCompanyName }}</h2>
+          <div class="flex gap-6 text-sm">
+            <div>
+              <span class="text-gray-500">Tag:</span>
+              <span :class="getPerformanceColor(performanceMetrics.day)" class="ml-2 font-semibold">
+                {{ performanceMetrics.day !== null ? `${performanceMetrics.day}%` : '–' }}
+              </span>
+            </div>
+            <div>
+              <span class="text-gray-500">Monat:</span>
+              <span :class="getPerformanceColor(performanceMetrics.month)" class="ml-2 font-semibold">
+                {{ performanceMetrics.month !== null ? `${performanceMetrics.month}%` : '–' }}
+              </span>
+            </div>
+            <div>
+              <span class="text-gray-500">Jahr:</span>
+              <span :class="getPerformanceColor(performanceMetrics.year)" class="ml-2 font-semibold">
+                {{ performanceMetrics.year !== null ? `${performanceMetrics.year}%` : '–' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </template>
       <div class="h-96">
         <canvas ref="chartCanvas"></canvas>
       </div>
@@ -76,8 +110,9 @@
             class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
         >
           <span class="font-medium"> {{formatDate(entry.date)}} </span>
-          <span class="text-lg font-bold text-primary"> {{ entry.price.toFixed(2) }}  USD
-  </span>
+          <span class="text-lg font-bold text-primary">
+          {{ convertPrice(entry.price) }} {{ getCurrencySymbol() }}
+          </span>
         </li>
       </ul>
     </UCard>
@@ -85,7 +120,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue"
+import { ref, onMounted, onUnmounted, computed } from "vue"
 
 const symbol = ref("AAPL")
 const chartCanvas = ref(null)
@@ -96,6 +131,39 @@ const searchQuery = ref('')
 const suggestions = ref([])
 
 const allStocks = ref([]) // Liste aus DB (Top 100)
+const allHistoricalPrices = ref([])
+
+const currentCompanyName = computed(() => {
+  const stock = allStocks.value.find(s => s.symbol === symbol.value)
+  return stock ? `${stock.name} (${stock.symbol})` : symbol.value
+})
+
+const performanceMetrics = computed(() => {
+  if (allHistoricalPrices.value.length === 0) {
+    return { day: null, month: null, year: null }
+  }
+
+  const prices = allHistoricalPrices.value
+  const currentPrice = prices[prices.length - 1]?.price
+
+  if (!currentPrice) return {day: null, month: null, year: null}
+
+  const calculatePerformance = (startPrice) => {
+    if(!startPrice) return null
+    return (((currentPrice - startPrice) / startPrice) * 100).toFixed(2)
+  }
+  return {
+    day: prices.length >= 2 ? calculatePerformance(prices[prices.length - 2]?.price) : null,
+    month: prices.length >= 20 ? calculatePerformance(prices[Math.max(0, prices.length - 20)]?.price) : null,
+    year: prices.length >= 250 ? calculatePerformance(prices[0]?.price) : null,
+  }
+})
+
+const getPerformanceColor = (value) => {
+  if (value === null) return 'text-gray-500'
+  return value >= 0 ? 'text-green-500' : 'text-red-500'
+}
+
 
 // Lädt alle Stocks einmalig vom Backend
 const loadAllStocks = async () => {
@@ -131,9 +199,9 @@ const searchStocks = () => {
 const selectSymbol = (s) => {
   symbol.value = s.symbol
   // Anzeige in Suchfeld: Name + Kürzel (oder nur Name, je Wunsch)
-  searchQuery.value = `${s.name} (${s.symbol})`
   suggestions.value = []
   reload()
+  searchQuery.value = ''
 }
 
 let chart
@@ -238,6 +306,13 @@ const reload = async () => {
     const validLabels = labels.slice(-minLength)
     const validValues = values.slice(-minLength)
 
+    // Speichere ALLE Kurse für Performance\-Berechnung
+    allHistoricalPrices.value = validLabels.map((date, i) => ({
+      date,
+      price: validValues[i]
+    }))
+
+    // Nur die letzten 5 für die Anzeige
     const lastEntries = validLabels
         .map((date, i) => {
           const price = validValues[i]
@@ -293,7 +368,10 @@ const renderChart = async (labels, values) => {
           enabled: true,
           callbacks: {
             title: (items) => (items.length ? formatDate(items[0].label) : ""),
-            label: (ctx) => `${ctx.dataset.label}: ${ctx.formattedValue} USD`,
+            label: (ctx) => {
+              const converted = convertPrice(ctx.parsed.y)
+              return `${ctx.dataset.label}: ${converted} ${getCurrencySymbol()}`
+            }
           },
         },
       },
@@ -315,14 +393,54 @@ const renderChart = async (labels, values) => {
     },
   })
 }
+const currency = ref('USD')
+const exchangeRate = ref(1)
+
+const fetchExchangeRate = async () => {
+  try {
+    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD')
+    const data = await res.json()
+    exchangeRate.value = data.rates.EUR || 0.92
+  } catch (err) {
+    console.error('Fehler beim Laden des Wechselkurses:', err)
+    exchangeRate.value = 0.92
+  }
+}
+
+const convertPrice = (priceUSD) => {
+  if (currency.value === 'EUR') {
+    return (priceUSD * exchangeRate.value).toFixed(2)
+  }
+  return priceUSD.toFixed(2)
+}
+
+const getCurrencySymbol = () => currency.value === 'EUR' ? '€' : '$'
+
+
 
 onMounted(async () => {
   await loadAllStocks()
+  await fetchExchangeRate()
   await reload()
+  await renderChart(labels, values)
+})
+
+const chartData = computed(() => {
+  return allHistoricalPrices.value.map(p => ({
+    date: p.date,
+    price: parseFloat(convertPrice(p.price))
+  }))
+})
+
+const watchCurrency = watch(() => currency.value, async () => {
+  const labels = chartData.value.map(p => p.date)
+  const values = chartData.value.map(p => p.price)
+  await renderChart(labels, values)
 })
 
 onUnmounted(() => {
   if (abortController) abortController.abort()
   if (chart) chart.destroy()
+  watchCurrency()
 })
 </script>
