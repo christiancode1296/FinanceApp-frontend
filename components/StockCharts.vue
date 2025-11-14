@@ -2,7 +2,6 @@
   <div class="space-y-6">
 
     <!-- Search Section -->
-    <!-- Search Section -->
     <UCard>
       <div class="flex flex-col gap-2">
 
@@ -96,28 +95,43 @@ const lastPrices = ref([])
 const searchQuery = ref('')
 const suggestions = ref([])
 
-// Auto-Complete Suchfunktion
-const searchStocks = async () => {
-  if (searchQuery.value.length < 2) {
-    suggestions.value = []
-    return
-  }
+const allStocks = ref([]) // Liste aus DB (Top 100)
 
+// Lädt alle Stocks einmalig vom Backend
+const loadAllStocks = async () => {
   try {
     const config = useRuntimeConfig()
     const apiUrl = config.public.API_URL || 'http://localhost:8080'
-    const res = await fetch(`${apiUrl}/api/stocks/search?query=${encodeURIComponent(searchQuery.value)}`)
+    const res = await fetch(`${apiUrl}/api/stocks/all`)
+    if (!res.ok) throw new Error(`Fehler beim Laden der Aktienliste: HTTP ${res.status}`)
     const data = await res.json()
-    suggestions.value = Array.isArray(data) ? data.slice(0, 10) : []
+    allStocks.value = Array.isArray(data) ? data : []
   } catch (err) {
-    console.error('Fehler bei der Suche:', err)
+    console.error(err)
+    // Fehler nicht direkt als Alert anzeigen, sondern in Konsole; optional setzen:
+    // errorMsg.value = err.message || String(err)
+    allStocks.value = []
   }
+}
+
+// Lokale Filter-Suche gegen allStocks
+const searchStocks = () => {
+  const q = (searchQuery.value || "").trim()
+  if (q.length < 1) {
+    suggestions.value = []
+    return
+  }
+  const up = q.toUpperCase()
+  suggestions.value = allStocks.value
+    .filter(s => ((s.name || "").toUpperCase().includes(up) || (s.symbol || "").toUpperCase().includes(up)))
+    .slice(0, 10)
 }
 
 // Wenn ein Vorschlag geklickt wird:
 const selectSymbol = (s) => {
   symbol.value = s.symbol
-  searchQuery.value = s.name
+  // Anzeige in Suchfeld: Name + Kürzel (oder nur Name, je Wunsch)
+  searchQuery.value = `${s.name} (${s.symbol})`
   suggestions.value = []
   reload()
 }
@@ -149,7 +163,6 @@ const fetchSeries = async (sym) => {
   errorMsg.value = ""
 
   try {
-    // Runtime Config nutzen statt hart-codiert localhost
     const config = useRuntimeConfig()
     const apiUrl = config.public.API_URL || 'http://localhost:8080'
     const url = `${apiUrl}/api/stocks/${encodeURIComponent(sym)}`
@@ -229,7 +242,7 @@ const reload = async () => {
         .map((date, i) => {
           const price = validValues[i]
           return price !== undefined && !isNaN(price)
-              ? { date, price }  // ← Wichtig: Objekt mit date und price
+              ? { date, price }
               : null
         })
         .filter(Boolean)
@@ -303,7 +316,10 @@ const renderChart = async (labels, values) => {
   })
 }
 
-onMounted(async () => { await reload() })
+onMounted(async () => {
+  await loadAllStocks()
+  await reload()
+})
 
 onUnmounted(() => {
   if (abortController) abortController.abort()
