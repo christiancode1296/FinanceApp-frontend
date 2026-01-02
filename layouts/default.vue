@@ -4,7 +4,7 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 const items: NavigationMenuItem[] = [
   {
     label: 'Suche',
-    to: '/suche',
+    to: '/stocks',
     icon: 'i-humbleicons:search'
   },
   {

@@ -17,12 +17,12 @@ type NuxtAppInjections =
   InjectionType<typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/app/plugins/chunk-reload.client.js")> &
   InjectionType<typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/pages/runtime/plugins/prefetch.client.js")> &
   InjectionType<typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/pages/runtime/plugins/check-if-page-unused.js")> &
-  InjectionType<typeof import("../../node_modules/@nuxt/devtools/dist/runtime/plugins/devtools.server.js")> &
-  InjectionType<typeof import("../../node_modules/@nuxt/devtools/dist/runtime/plugins/devtools.client.js")> &
+  InjectionType<typeof import("../../node_modules/.pnpm/@nuxt+devtools@2.7.0_vite@7.1.12_jiti@2.6.1_lightningcss@1.30.2_terser@5.44.0_yaml@2.8.1__vue@3.5.22_typescript@5.9.3_/node_modules/@nuxt/devtools/dist/runtime/plugins/devtools.server.js")> &
+  InjectionType<typeof import("../../node_modules/.pnpm/@nuxt+devtools@2.7.0_vite@7.1.12_jiti@2.6.1_lightningcss@1.30.2_terser@5.44.0_yaml@2.8.1__vue@3.5.22_typescript@5.9.3_/node_modules/@nuxt/devtools/dist/runtime/plugins/devtools.client.js")> &
   InjectionType<typeof import("../../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/plugins/colors.js")> &
-  InjectionType<typeof import("../../node_modules/@nuxtjs/color-mode/dist/runtime/plugin.server.js")> &
-  InjectionType<typeof import("../../node_modules/@nuxtjs/color-mode/dist/runtime/plugin.client.js")> &
-  InjectionType<typeof import("../../node_modules/@nuxt/icon/dist/runtime/plugin.js")> &
+  InjectionType<typeof import("../../node_modules/.pnpm/@nuxtjs+color-mode@3.5.2_magicast@0.5.1/node_modules/@nuxtjs/color-mode/dist/runtime/plugin.server.js")> &
+  InjectionType<typeof import("../../node_modules/.pnpm/@nuxtjs+color-mode@3.5.2_magicast@0.5.1/node_modules/@nuxtjs/color-mode/dist/runtime/plugin.client.js")> &
+  InjectionType<typeof import("../../node_modules/.pnpm/@nuxt+icon@2.1.0_magicast@0.5.1_vite@7.1.12_jiti@2.6.1_lightningcss@1.30.2_terser@5.44._522557b5fee258fc974d8ceea19f66c2/node_modules/@nuxt/icon/dist/runtime/plugin.js")> &
   InjectionType<typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/app/plugins/warn.dev.server.js")> &
   InjectionType<typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/app/plugins/check-if-layout-used.js")>
 

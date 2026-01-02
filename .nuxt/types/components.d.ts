@@ -16,6 +16,7 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 interface _GlobalComponents {
   'Login': typeof import("../../components/Login.vue")['default']
   'StockCharts': typeof import("../../components/StockCharts.vue")['default']
+  'StockSearch': typeof import("../../components/StockSearch.vue")['default']
   'Test': typeof import("../../components/Test.vue")['default']
   'Watchlist': typeof import("../../components/Watchlist.vue")['default']
   'UColorModeAvatarDVue': typeof import("../../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.d.vue")['default']
@@ -261,8 +262,8 @@ interface _GlobalComponents {
   'DonutChart': typeof import("../../node_modules/.pnpm/nuxt-charts@1.0.2_magicast@0.5.1_vue@3.5.22_typescript@5.9.3_/node_modules/nuxt-charts/dist/runtime/vue-chrts")['DonutChart']
   'BubbleChart': typeof import("../../node_modules/.pnpm/nuxt-charts@1.0.2_magicast@0.5.1_vue@3.5.22_typescript@5.9.3_/node_modules/nuxt-charts/dist/runtime/vue-chrts")['BubbleChart']
   'GanttChart': typeof import("../../node_modules/.pnpm/nuxt-charts@1.0.2_magicast@0.5.1_vue@3.5.22_typescript@5.9.3_/node_modules/nuxt-charts/dist/runtime/vue-chrts")['GanttChart']
-  'Icon': typeof import("../../node_modules/@nuxt/icon/dist/runtime/components/index")['default']
-  'ColorScheme': typeof import("../../node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']
+  'Icon': typeof import("../../node_modules/.pnpm/@nuxt+icon@2.1.0_magicast@0.5.1_vite@7.1.12_jiti@2.6.1_lightningcss@1.30.2_terser@5.44._522557b5fee258fc974d8ceea19f66c2/node_modules/@nuxt/icon/dist/runtime/components/index")['default']
+  'ColorScheme': typeof import("../../node_modules/.pnpm/@nuxtjs+color-mode@3.5.2_magicast@0.5.1/node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']
   'NuxtPage': typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/pages/runtime/page")['default']
   'NoScript': typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/head/runtime/components")['NoScript']
   'Link': typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/head/runtime/components")['Link']
@@ -276,6 +277,7 @@ interface _GlobalComponents {
   'NuxtIsland': typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/app/components/nuxt-island")['default']
   'LazyLogin': LazyComponent<typeof import("../../components/Login.vue")['default']>
   'LazyStockCharts': LazyComponent<typeof import("../../components/StockCharts.vue")['default']>
+  'LazyStockSearch': LazyComponent<typeof import("../../components/StockSearch.vue")['default']>
   'LazyTest': LazyComponent<typeof import("../../components/Test.vue")['default']>
   'LazyWatchlist': LazyComponent<typeof import("../../components/Watchlist.vue")['default']>
   'LazyUColorModeAvatarDVue': LazyComponent<typeof import("../../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.d.vue")['default']>
@@ -521,8 +523,8 @@ interface _GlobalComponents {
   'LazyDonutChart': LazyComponent<typeof import("../../node_modules/.pnpm/nuxt-charts@1.0.2_magicast@0.5.1_vue@3.5.22_typescript@5.9.3_/node_modules/nuxt-charts/dist/runtime/vue-chrts")['DonutChart']>
   'LazyBubbleChart': LazyComponent<typeof import("../../node_modules/.pnpm/nuxt-charts@1.0.2_magicast@0.5.1_vue@3.5.22_typescript@5.9.3_/node_modules/nuxt-charts/dist/runtime/vue-chrts")['BubbleChart']>
   'LazyGanttChart': LazyComponent<typeof import("../../node_modules/.pnpm/nuxt-charts@1.0.2_magicast@0.5.1_vue@3.5.22_typescript@5.9.3_/node_modules/nuxt-charts/dist/runtime/vue-chrts")['GanttChart']>
-  'LazyIcon': LazyComponent<typeof import("../../node_modules/@nuxt/icon/dist/runtime/components/index")['default']>
-  'LazyColorScheme': LazyComponent<typeof import("../../node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']>
+  'LazyIcon': LazyComponent<typeof import("../../node_modules/.pnpm/@nuxt+icon@2.1.0_magicast@0.5.1_vite@7.1.12_jiti@2.6.1_lightningcss@1.30.2_terser@5.44._522557b5fee258fc974d8ceea19f66c2/node_modules/@nuxt/icon/dist/runtime/components/index")['default']>
+  'LazyColorScheme': LazyComponent<typeof import("../../node_modules/.pnpm/@nuxtjs+color-mode@3.5.2_magicast@0.5.1/node_modules/@nuxtjs/color-mode/dist/runtime/component.vue3.vue")['default']>
   'LazyNuxtPage': LazyComponent<typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/pages/runtime/page")['default']>
   'LazyNoScript': LazyComponent<typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/head/runtime/components")['NoScript']>
   'LazyLink': LazyComponent<typeof import("../../node_modules/.pnpm/nuxt@4.2.0_@parcel+watcher@2.5.1_@vue+compiler-sfc@3.5.22_db0@0.3.4_eslint@9.39.1_jiti@_d999a7f14ab13220c587579e23315cfd/node_modules/nuxt/dist/head/runtime/components")['Link']>
