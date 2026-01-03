@@ -4,9 +4,8 @@
     <!-- Search Section -->
     <UCard>
       <div class="flex flex-col gap-4">
-
         <!-- Sucheingabe -->
-        <div class = "flex gap-2" >
+        <div class="flex gap-2">
           <UFormGroup label="Aktie suchen" class="flex-1">
             <UInput
                 v-model.trim="searchQuery"
@@ -15,24 +14,36 @@
                 size="lg"
             />
           </UFormGroup>
-          <div class="flex items-end">
-            <!-- Button -->
+
+          <div class="flex items-end gap-2 justify-center flex-0.7">
             <UButton
                 @click="reload()"
                 :loading="loading"
                 size="lg"
-                    icon="i-lucide-refresh-cw"
+                icon="i-lucide-refresh-cw"
                 class="mt-2"
             >
               Laden
             </UButton>
-            <UButton
-                @click="currency = currency === 'USD' ? 'EUR' : 'USD'"
-                size="lg"
-                variant="soft"
-            >
-              {{ currency }}
-            </UButton>
+
+            <div class="flex items-end gap-2">
+              <UButton
+                  @click="currency = currency === 'USD' ? 'EUR' : 'USD'"
+                  size="lg"
+                  variant="soft"
+              >
+                {{ currency }}
+              </UButton>
+
+              <div class="relative" ref="infoIconRef">
+                <div class="group cursor-help">
+                  <UIcon
+                      name="i-lucide-info"
+                      class="w-5 h-5 text-gray-400 hover:text-blue-500 transition-colors"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -50,6 +61,7 @@
             {{ s.name }} ({{ s.symbol }}) – {{ s.exchange || 'N/A' }}
           </div>
         </div>
+
         <UAlert
             v-if="errorMsg"
             color="red"
@@ -60,6 +72,23 @@
       </div>
     </UCard>
 
+    <!-- Tooltip außerhalb der Flexbox über Teleport -->
+    <Teleport to="body">
+      <div
+          v-if="showTooltip"
+          :style="tooltipStyle"
+          class="fixed px-3 py-2 bg-gray-900 dark:bg-gray-700 text-white text-xs rounded-lg shadow-lg z-[9999] pointer-events-none"
+      >
+        <div class="flex flex-col gap-1">
+          <div class="flex items-center gap-2">
+            <UIcon name="i-lucide-alert-circle" class="w-3.5 h-3.5 flex-shrink-0" />
+            <span> Die Historischen Werte werden mit dem aktuellen</span>
+          </div>
+          <span class="ml-5">Wechselkurs von {{ exchangeRate.toFixed(4) }} umgerechnet!</span>
+        </div>
+        <div class="absolute bottom-full left-1/2 -translate-x-1/2 border-4 border-transparent border-b-gray-900 dark:border-b-gray-700"></div>
+      </div>
+    </Teleport>
 
     <!-- Chart -->
     <UCard>
@@ -443,4 +472,38 @@ onUnmounted(() => {
   if (chart) chart.destroy()
   watchCurrency()
 })
+const infoIconRef = ref(null)
+const showTooltip = ref(false)
+const tooltipStyle = ref({})
+
+const updateTooltipPosition = () => {
+  if (!infoIconRef.value) return
+
+  const rect = infoIconRef.value.getBoundingClientRect()
+  tooltipStyle.value = {
+    left: `${rect.left + rect.width / 2}px`,
+    top: `${rect.bottom + 8}px`,
+    transform: 'translateX(-50%)'
+  }
+}
+
+onMounted(async () => {
+  await loadAllStocks()
+  await fetchExchangeRate()
+  await reload()
+
+  // Event-Listener für Tooltip
+  const icon = infoIconRef.value?.querySelector('.group')
+  if (icon) {
+    icon.addEventListener('mouseenter', () => {
+      showTooltip.value = true
+      updateTooltipPosition()
+    })
+    icon.addEventListener('mouseleave', () => {
+      showTooltip.value = false
+    })
+  }
+})
+
+
 </script>
