@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import { useRuntimeConfig } from "nuxt/app"
 
 interface Stock {
   symbol: string
@@ -34,7 +35,7 @@ const loadWatchlist = async () => {
 
     // Wähle automatisch die erste Aktie aus
     if (watchlist.value.length > 0) {
-      selectedStock.value = watchlist.value[0]
+      selectedStock.value = watchlist.value[0] ?? null
     }
   } catch (err) {
     console.error('Fehler beim Laden der Watchlist:', err)
@@ -50,7 +51,7 @@ const selectStock = (stock: Stock) => {
 const removeStock = (symbol: string) => {
   watchlist.value = watchlist.value.filter(s => s.symbol !== symbol)
   if (selectedStock.value?.symbol === symbol) {
-    selectedStock.value = watchlist.value.length > 0 ? watchlist.value[0] : null
+    selectedStock.value = watchlist.value.length > 0 ? (watchlist.value[0] ?? null) : null
   }
 }
 
