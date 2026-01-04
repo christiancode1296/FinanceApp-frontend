@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/FinanceApp-frontend.iml" filepath="$PROJECT_DIR$/.idea/FinanceApp-frontend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/composables/composables.iml" filepath="$PROJECT_DIR$/composables/composables.iml" />
     </modules>
   </component>
 </project>

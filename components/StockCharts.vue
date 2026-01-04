@@ -169,7 +169,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from "vue"
 
-const symbol = ref("AAPL")
+const symbol = useState('currentSymbol', () => "AAPL")
 const chartCanvas = ref(null)
 const errorMsg = ref("")
 const loading = ref(false)
@@ -523,31 +523,6 @@ onMounted(async () => {
   }
 })
 
-const watchlist = ref([])
-
-// ✅ NEU: Prüfen, ob eine Aktie in der Watchlist ist
-const isInWatchlist = (stockSymbol) => {
-  return watchlist.value.includes(stockSymbol)
-  //     ↑ Gibt true zurück, wenn Symbol enthalten ist
-}
-
-// ✅ NEU: Aktie zur Watchlist hinzufügen/entfernen
-const toggleWatchlist = (stock) => {
-  const index = watchlist.value.indexOf(stock.symbol)
-  //            ↑ Finde Position im Array (-1 wenn nicht vorhanden)
-
-  if (index > -1) {
-    // ✅ Symbol ist schon drin → Entfernen
-    watchlist.value.splice(index, 1)
-    console.log(`❌ ${stock.symbol} entfernt`)
-  } else {
-    // ✅ Symbol ist nicht drin → Hinzufügen
-    watchlist.value.push(stock.symbol)
-    console.log(`✅ ${stock.symbol} hinzugefügt`)
-  }
-
-  // Später hier API-Call zur Backend-Synchronisation
-}
-
+const { isInWatchlist, toggleWatchlist } = useWatchlist()
 
 </script>
