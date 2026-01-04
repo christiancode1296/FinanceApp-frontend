@@ -55,10 +55,14 @@
           <div
               v-for="s in suggestions"
               :key="s.symbol"
-              @click="selectSymbol(s)"
               class="p-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
           >
+            <div
+                @click="selectSymbol(s)"
+                class="flex-1 cursor-pointer"
+                >
             {{ s.name }} ({{ s.symbol }}) – {{ s.exchange || 'N/A' }}
+              </div>
           </div>
         </div>
 
@@ -94,7 +98,20 @@
     <UCard>
       <template #header>
         <div class="flex justify-between items-center">
-          <h2 class="text-2xl font-bold">{{ currentCompanyName }}</h2>
+          <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+            <div class="flex items-center gap-7">
+              <h2 class="text-2xl font-bold">
+              {{ currentCompanyName }}
+              </h2>
+              <UIcon
+                :name="isInWatchlist(symbol) ? 'i-lucide-star' : 'i-lucide-star-off'"
+                :class="[
+                 isInWatchlist(symbol) ? 'text-yellow-500' : 'text-gray-400',
+                 'transition-all duration-300 ease-in-out']"
+                class="w-5 h-5 cursor-pointer hover:scale-110 active:scale-95"
+                @click="toggleWatchlist({ symbol: symbol, name: currentCompanyName })"
+            />
+            </div>
           <div class="flex gap-6 text-sm">
             <div>
               <span class="text-gray-500">Tag:</span>
@@ -114,6 +131,7 @@
                 {{ performanceMetrics.year !== null ? `${performanceMetrics.year}%` : '–' }}
               </span>
             </div>
+          </div>
           </div>
         </div>
       </template>
@@ -378,7 +396,7 @@ const renderChart = async (labels, values) => {
           label: symbol.value,
           data: values,
           tension: 0.3,
-          borderColor: 'rgb(59, 130, 246)',
+          borderColor: 'rgb(5,99,241)',
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
           fill: true,
           borderWidth: 2,
@@ -504,6 +522,32 @@ onMounted(async () => {
     })
   }
 })
+
+const watchlist = ref([])
+
+// ✅ NEU: Prüfen, ob eine Aktie in der Watchlist ist
+const isInWatchlist = (stockSymbol) => {
+  return watchlist.value.includes(stockSymbol)
+  //     ↑ Gibt true zurück, wenn Symbol enthalten ist
+}
+
+// ✅ NEU: Aktie zur Watchlist hinzufügen/entfernen
+const toggleWatchlist = (stock) => {
+  const index = watchlist.value.indexOf(stock.symbol)
+  //            ↑ Finde Position im Array (-1 wenn nicht vorhanden)
+
+  if (index > -1) {
+    // ✅ Symbol ist schon drin → Entfernen
+    watchlist.value.splice(index, 1)
+    console.log(`❌ ${stock.symbol} entfernt`)
+  } else {
+    // ✅ Symbol ist nicht drin → Hinzufügen
+    watchlist.value.push(stock.symbol)
+    console.log(`✅ ${stock.symbol} hinzugefügt`)
+  }
+
+  // Später hier API-Call zur Backend-Synchronisation
+}
 
 
 </script>
