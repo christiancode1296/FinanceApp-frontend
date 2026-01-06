@@ -10,7 +10,7 @@
             <UInput
                 v-model.trim="searchQuery"
                 @input="searchStocks"
-                placeholder="Name"
+                placeholder="Name oder Symbol"
                 size="lg"
             />
           </UFormGroup>
@@ -37,10 +37,7 @@
 
               <div class="relative" ref="infoIconRef">
                 <div class="group cursor-help">
-                  <UIcon
-                      name="i-lucide-info"
-                      class="w-5 h-5 text-gray-400 hover:text-blue-500 transition-colors"
-                  />
+                  <UIcon name="i-lucide-info" class="w-5 h-5 text-gray-400 hover:text-gray-600" />
                 </div>
               </div>
             </div>
@@ -60,9 +57,9 @@
             <div
                 @click="selectSymbol(s)"
                 class="flex-1 cursor-pointer"
-                >
-            {{ s.name }} ({{ s.symbol }}) – {{ s.exchange || 'N/A' }}
-              </div>
+            >
+              {{ s.name }} ({{ s.symbol }}) – {{ s.exchange || 'N/A' }}
+            </div>
           </div>
         </div>
 
@@ -97,44 +94,58 @@
     <!-- Chart -->
     <UCard>
       <template #header>
-        <div class="flex justify-between items-center">
-          <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+        <div class="flex flex-col gap-4">
+          <!-- Erste Zeile: Titel + Performance -->
+          <div class="flex justify-between items-center">
             <div class="flex items-center gap-7">
-              <h2 class="text-2xl font-bold">
-              {{ currentCompanyName }}
-              </h2>
+              <h2 class="text-2xl font-bold">{{ currentCompanyName }}</h2>
               <UIcon
-                :name="isInWatchlist(symbol) ? 'i-lucide-star' : 'i-lucide-star-off'"
-                :class="[
-                 isInWatchlist(symbol) ? 'text-yellow-500' : 'text-gray-400',
-                 'transition-all duration-300 ease-in-out']"
-                class="w-5 h-5 cursor-pointer hover:scale-110 active:scale-95"
-                @click="toggleWatchlist({ symbol: symbol, name: currentCompanyName })"
-            />
+                  :name="isInWatchlist(symbol) ? 'i-lucide-star' : 'i-lucide-star-off'"
+                  :class="[
+                  isInWatchlist(symbol) ? 'text-yellow-500' : 'text-gray-400',
+                  'transition-all duration-300 ease-in-out'
+                ]"
+                  class="w-5 h-5 cursor-pointer hover:scale-110 active:scale-95"
+                  @click="toggleWatchlist({ symbol: symbol, name: currentCompanyName })"
+              />
             </div>
-          <div class="flex gap-6 text-sm">
-            <div>
-              <span class="text-gray-500">Tag:</span>
-              <span :class="getPerformanceColor(performanceMetrics.day)" class="ml-2 font-semibold">
-                {{ performanceMetrics.day !== null ? `${performanceMetrics.day}%` : '–' }}
-              </span>
-            </div>
-            <div>
-              <span class="text-gray-500">Monat:</span>
-              <span :class="getPerformanceColor(performanceMetrics.month)" class="ml-2 font-semibold">
-                {{ performanceMetrics.month !== null ? `${performanceMetrics.month}%` : '–' }}
-              </span>
-            </div>
-            <div>
-              <span class="text-gray-500">Jahr:</span>
-              <span :class="getPerformanceColor(performanceMetrics.year)" class="ml-2 font-semibold">
-                {{ performanceMetrics.year !== null ? `${performanceMetrics.year}%` : '–' }}
-              </span>
+            <div class="flex gap-6 text-sm">
+              <div>
+                <span class="text-gray-500">Tag:</span>
+                <span :class="getPerformanceColor(performanceMetrics.day)" class="ml-2 font-semibold">
+                  {{ performanceMetrics.day !== null ? `${performanceMetrics.day}%` : '–' }}
+                </span>
+              </div>
+              <div>
+                <span class="text-gray-500">Monat:</span>
+                <span :class="getPerformanceColor(performanceMetrics.month)" class="ml-2 font-semibold">
+                  {{ performanceMetrics.month !== null ? `${performanceMetrics.month}%` : '–' }}
+                </span>
+              </div>
+              <div>
+                <span class="text-gray-500">Jahr:</span>
+                <span :class="getPerformanceColor(performanceMetrics.year)" class="ml-2 font-semibold">
+                  {{ performanceMetrics.year !== null ? `${performanceMetrics.year}%` : '–' }}
+                </span>
+              </div>
             </div>
           </div>
+
+          <!-- ✨ Zeitraum-Toggle -->
+          <div class="flex gap-2">
+            <UButton
+                v-for="range in timeRanges"
+                :key="range.value"
+                @click="selectedTimeRange = range.value"
+                :variant="selectedTimeRange === range.value ? 'solid' : 'soft'"
+                size="sm"
+            >
+              {{ range.label }}
+            </UButton>
           </div>
         </div>
       </template>
+
       <div class="h-96">
         <canvas ref="chartCanvas"></canvas>
       </div>
@@ -156,7 +167,7 @@
             :key="index"
             class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg"
         >
-          <span class="font-medium"> {{formatDate(entry.date)}} </span>
+          <span class="font-medium"> {{ formatDate(entry.date) }} </span>
           <span class="text-lg font-bold text-primary">
           {{ convertPrice(entry.price) }} {{ getCurrencySymbol() }}
           </span>
@@ -167,7 +178,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed } from "vue"
+import { ref, onMounted, onUnmounted, computed, watch } from "vue"
+
+// ============================================================
+// State
+// ============================================================
 
 const symbol = useState('currentSymbol', () => "AAPL")
 const chartCanvas = ref(null)
@@ -176,9 +191,30 @@ const loading = ref(false)
 const lastPrices = ref([])
 const searchQuery = ref('')
 const suggestions = ref([])
-
-const allStocks = ref([]) // Liste aus DB (Top 100)
+const allStocks = ref([])
 const allHistoricalPrices = ref([])
+const currency = ref('USD')
+const exchangeRate = ref(1)
+const infoIconRef = ref(null)
+const showTooltip = ref(false)
+const tooltipStyle = ref({})
+
+// ✨ Zeitraum-State
+const selectedTimeRange = ref(365) // Standard: 1 Jahr
+
+const timeRanges = [
+  { label: '30 Tage', value: 30 },
+  { label: '6 Monate', value: 180 },
+  { label: '1 Jahr', value: 365 },
+  { label: '3 Jahre', value: 1095 }
+]
+
+let chart
+let abortController
+
+// ============================================================
+// Computed Properties
+// ============================================================
 
 const currentCompanyName = computed(() => {
   const stock = allStocks.value.find(s => s.symbol === symbol.value)
@@ -186,33 +222,127 @@ const currentCompanyName = computed(() => {
 })
 
 const performanceMetrics = computed(() => {
-  if (allHistoricalPrices.value.length === 0) {
+  const prices = filteredHistoricalData.value // ← Diese Zeile ändern!
+
+  if (prices.length === 0) {
     return { day: null, month: null, year: null }
   }
 
-  const prices = allHistoricalPrices.value
   const currentPrice = prices[prices.length - 1]?.price
 
-  if (!currentPrice) return {day: null, month: null, year: null}
+  if (!currentPrice) return { day: null, month: null, year: null }
 
   const calculatePerformance = (startPrice) => {
-    if(!startPrice) return null
+    if (!startPrice) return null
     return (((currentPrice - startPrice) / startPrice) * 100).toFixed(2)
   }
+
   return {
-    day: prices.length >= 2 ? calculatePerformance(prices[prices.length - 2]?.price) : null,
-    month: prices.length >= 20 ? calculatePerformance(prices[Math.max(0, prices.length - 20)]?.price) : null,
-    year: prices.length >= 250 ? calculatePerformance(prices[0]?.price) : null,
+    day: prices.length >= 2
+        ? calculatePerformance(prices[prices.length - 2]?.price)
+        : null,
+    month: prices.length >= 20
+        ? calculatePerformance(prices[Math.max(0, prices.length - 20)]?.price)
+        : null,
+    year: calculatePerformance(prices[0]?.price)
   }
 })
+
+// ✨ Gefilterte Daten basierend auf selectedTimeRange
+const filteredHistoricalData = computed(() => {
+  if (!allHistoricalPrices.value.length) return []
+
+  const data = allHistoricalPrices.value
+  const today = new Date()
+
+  // ✨ Berechne Start-Datum basierend auf Kalendertagen
+  const startDate = new Date(today)
+
+  switch (selectedTimeRange.value) {
+    case 30:
+      startDate.setDate(today.getDate() - 30)
+      break
+    case 180:
+      startDate.setMonth(today.getMonth() - 6)
+      break
+    case 365:
+      startDate.setFullYear(today.getFullYear() - 1)
+      break
+    case 1095:
+      startDate.setFullYear(today.getFullYear() - 3)
+      break
+  }
+
+  // ✨ Filtere nach Datum, nicht nach Array-Position
+  const filtered = data.filter(p => {
+    const priceDate = new Date(p.date)
+    return priceDate >= startDate
+  })
+
+  console.log('🔎 Gefilterte Daten:', {
+    zeitraum: `${selectedTimeRange.value} Tage`,
+    startDatum: startDate.toISOString().split('T')[0],
+    endDatum: today.toISOString().split('T')[0],
+    gefilterteTage: filtered.length,
+    ersterTag: filtered[0]?.date,
+    letzterTag: filtered[filtered.length - 1]?.date
+  })
+
+  return filtered
+})
+
+// ✨ Chart-Daten mit Currency-Konvertierung
+const chartData = computed(() => {
+  return filteredHistoricalData.value.map(p => ({
+    date: p.date,
+    price: parseFloat(convertPrice(p.price))
+  }))
+})
+
+// ============================================================
+// Helper Functions
+// ============================================================
 
 const getPerformanceColor = (value) => {
   if (value === null) return 'text-gray-500'
   return value >= 0 ? 'text-green-500' : 'text-red-500'
 }
 
+const formatDate = (yyyyMmDd) => {
+  if (!yyyyMmDd) return "-"
+  const d = new Date(yyyyMmDd)
+  if (isNaN(d)) return "-"
+  return new Intl.DateTimeFormat(undefined, {
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(d)
+}
 
-// Lädt alle Stocks einmalig vom Backend
+const convertPrice = (priceUSD) => {
+  if (currency.value === 'EUR') {
+    return (priceUSD * exchangeRate.value).toFixed(2)
+  }
+  return priceUSD.toFixed(2)
+}
+
+const getCurrencySymbol = () => currency.value === 'EUR' ? '€' : '$'
+
+const updateTooltipPosition = () => {
+  if (!infoIconRef.value) return
+
+  const rect = infoIconRef.value.getBoundingClientRect()
+  tooltipStyle.value = {
+    left: `${rect.left + rect.width / 2}px`,
+    top: `${rect.bottom + 8}px`,
+    transform: 'translateX(-50%)'
+  }
+}
+
+// ============================================================
+// API Functions
+// ============================================================
+
 const loadAllStocks = async () => {
   try {
     const config = useRuntimeConfig()
@@ -223,52 +353,19 @@ const loadAllStocks = async () => {
     allStocks.value = Array.isArray(data) ? data : []
   } catch (err) {
     console.error(err)
-    // Fehler nicht direkt als Alert anzeigen, sondern in Konsole; optional setzen:
-    // errorMsg.value = err.message || String(err)
     allStocks.value = []
   }
 }
 
-// Lokale Filter-Suche gegen allStocks
-const searchStocks = () => {
-  const q = (searchQuery.value || "").trim()
-  if (q.length < 1) {
-    suggestions.value = []
-    return
+const fetchExchangeRate = async () => {
+  try {
+    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD')
+    const data = await res.json()
+    exchangeRate.value = data.rates.EUR || 0.92
+  } catch (err) {
+    console.error('Fehler beim Laden des Wechselkurses:', err)
+    exchangeRate.value = 0.92
   }
-  const up = q.toUpperCase()
-  suggestions.value = allStocks.value
-    .filter(s => ((s.name || "").toUpperCase().includes(up) || (s.symbol || "").toUpperCase().includes(up)))
-    .slice(0, 10)
-}
-
-// Wenn ein Vorschlag geklickt wird:
-const selectSymbol = (s) => {
-  symbol.value = s.symbol
-  // Anzeige in Suchfeld: Name + Kürzel (oder nur Name, je Wunsch)
-  suggestions.value = []
-  reload()
-  searchQuery.value = ''
-}
-
-let chart
-let abortController
-
-const loadChartJs = async () => {
-  const ChartJS = await import("chart.js")
-  const {
-    Chart,
-    LineController, LineElement, PointElement,
-    LinearScale, CategoryScale,
-    Tooltip, Legend, Filler
-  } = ChartJS
-
-  Chart.register(
-      LineController, LineElement, PointElement,
-      LinearScale, CategoryScale, Tooltip, Legend, Filler
-  )
-
-  return Chart
 }
 
 const fetchSeries = async (sym) => {
@@ -312,7 +409,9 @@ const fetchSeries = async (sym) => {
     }
 
     norm.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
-    const series = norm.slice(-360)
+
+    // ✨ Lade 3 Jahre Daten für Time-Range-Filter
+    const series = norm.slice(-1095)
     const labels = series.map((p) => p.date)
     const values = series.map((p) => p.close)
 
@@ -327,16 +426,48 @@ const fetchSeries = async (sym) => {
   }
 }
 
+// ============================================================
+// Search Functions
+// ============================================================
 
-const formatDate = (yyyyMmDd) => {
-  if (!yyyyMmDd) return "-"
-  const d = new Date(yyyyMmDd)
-  if (isNaN(d)) return "-"
-  return new Intl.DateTimeFormat(undefined, {
-    year: "2-digit",
-    month: "2-digit",
-    day: "2-digit"
-  }).format(d)
+const searchStocks = () => {
+  const q = (searchQuery.value || "").trim()
+  if (q.length < 1) {
+    suggestions.value = []
+    return
+  }
+  const up = q.toUpperCase()
+  suggestions.value = allStocks.value
+      .filter(s => ((s.name || "").toUpperCase().includes(up) || (s.symbol || "").toUpperCase().includes(up)))
+      .slice(0, 10)
+}
+
+const selectSymbol = (s) => {
+  symbol.value = s.symbol
+  suggestions.value = []
+  reload()
+  searchQuery.value = ''
+}
+
+// ============================================================
+// Chart Functions
+// ============================================================
+
+const loadChartJs = async () => {
+  const ChartJS = await import("chart.js")
+  const {
+    Chart,
+    LineController, LineElement, PointElement,
+    LinearScale, CategoryScale,
+    Tooltip, Legend, Filler
+  } = ChartJS
+
+  Chart.register(
+      LineController, LineElement, PointElement,
+      LinearScale, CategoryScale, Tooltip, Legend, Filler
+  )
+
+  return Chart
 }
 
 const reload = async () => {
@@ -353,7 +484,13 @@ const reload = async () => {
     const validLabels = labels.slice(-minLength)
     const validValues = values.slice(-minLength)
 
-    // Speichere ALLE Kurse für Performance\-Berechnung
+    console.log('🔍 API-Daten:', {
+      ersterTag: labels[0],
+      letzterTag: labels[labels.length - 1],
+      anzahlTage: labels.length
+    })
+
+    // Speichere ALLE Kurse für Performance-Berechnung
     allHistoricalPrices.value = validLabels.map((date, i) => ({
       date,
       price: validValues[i]
@@ -372,20 +509,31 @@ const reload = async () => {
         .reverse()
 
     lastPrices.value = lastEntries
-    await renderChart(validLabels, validValues)
+    await renderChart()
   } catch (e) {
     errorMsg.value = e.message || String(e)
-    await renderChart([], [])
+    await renderChart()
   } finally {
     loading.value = false
   }
 }
 
-const renderChart = async (labels, values) => {
+const renderChart = async () => {
   const Chart = await loadChartJs()
-  const ctx = chartCanvas.value.getContext("2d")
+  const ctx = chartCanvas.value?.getContext("2d")
+  if (!ctx) return
 
   if (chart) chart.destroy()
+
+  const labels = chartData.value.map(p => p.date)
+  const values = chartData.value.map(p => p.price)
+
+  console.log('📊 Chart rendert:', {
+    zeitraum: selectedTimeRange.value,
+    ersterTag: labels[0],
+    letzterTag: labels[labels.length - 1],
+    anzahlPunkte: labels.length
+  })
 
   chart = new Chart(ctx, {
     type: "line",
@@ -414,10 +562,19 @@ const renderChart = async (labels, values) => {
         tooltip: {
           enabled: true,
           callbacks: {
-            title: (items) => (items.length ? formatDate(items[0].label) : ""),
-            label: (ctx) => {
-              const converted = convertPrice(ctx.parsed.y)
-              return `${ctx.dataset.label}: ${converted} ${getCurrencySymbol()}`
+            title: (items) => {
+              const rawDate = items[0]?.label
+              if (!rawDate) return ''
+              const d = new Date(rawDate)
+              return d.toLocaleDateString('de-DE', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+              })
+            },
+            label: (context) => {
+              const val = context.parsed.y
+              return `${symbol.value}: ${val.toFixed(2)} ${getCurrencySymbol()}`
             }
           },
         },
@@ -427,83 +584,62 @@ const renderChart = async (labels, values) => {
           display: true,
           grid: { display: false },
           ticks: {
-            callback: (_, idx) => formatDate(labels[idx]),
-            maxRotation: 0,
+            maxRotation: 45,
+            minRotation: 45,
             autoSkip: true,
-          },
+            maxTicksLimit: 8,
+            callback: function(value, index) {
+              const date = this.getLabelForValue(value)
+              if (!date) return ''
+
+              const d = new Date(date)
+              if (isNaN(d)) return date
+
+              if (selectedTimeRange.value > 180) {
+                return d.toLocaleDateString('de-DE', {
+                  month: 'short',
+                  year: '2-digit'
+                })
+              }
+
+              return d.toLocaleDateString('de-DE', {
+                day: '2-digit',
+                month: '2-digit'
+              })
+            }
+          }
         },
         y: {
           display: true,
-          grid: { color: 'rgba(0, 0, 0, 0.05)' }
+          grid: { color: 'rgba(0, 0, 0, 0.05)' },
+          ticks: {
+            callback: function(value) {
+              return `${value.toFixed(2)} ${getCurrencySymbol()}`
+            }
+          }
         },
       },
     },
   })
 }
-const currency = ref('USD')
-const exchangeRate = ref(1)
 
-const fetchExchangeRate = async () => {
-  try {
-    const res = await fetch('https://api.exchangerate-api.com/v4/latest/USD')
-    const data = await res.json()
-    exchangeRate.value = data.rates.EUR || 0.92
-  } catch (err) {
-    console.error('Fehler beim Laden des Wechselkurses:', err)
-    exchangeRate.value = 0.92
-  }
-}
+// ============================================================
+// Watchers
+// ============================================================
 
-const convertPrice = (priceUSD) => {
-  if (currency.value === 'EUR') {
-    return (priceUSD * exchangeRate.value).toFixed(2)
-  }
-  return priceUSD.toFixed(2)
-}
-
-const getCurrencySymbol = () => currency.value === 'EUR' ? '€' : '$'
-
-
-
-onMounted(async () => {
-  await loadAllStocks()
-  await fetchExchangeRate()
-  await reload()
-  await renderChart(labels, values)
+// ✨ Watch für Zeitraum-Änderung
+watch(() => selectedTimeRange.value, async () => {
+  await renderChart()
 })
 
-const chartData = computed(() => {
-  return allHistoricalPrices.value.map(p => ({
-    date: p.date,
-    price: parseFloat(convertPrice(p.price))
-  }))
+// Watch für Currency-Änderung
+watch(() => currency.value, async () => {
+  await renderChart()
 })
 
-const watchCurrency = watch(() => currency.value, async () => {
-  const labels = chartData.value.map(p => p.date)
-  const values = chartData.value.map(p => p.price)
-  await renderChart(labels, values)
-})
-
-onUnmounted(() => {
-  if (abortController) abortController.abort()
-  if (chart) chart.destroy()
-  watchCurrency()
-})
-const infoIconRef = ref(null)
-const showTooltip = ref(false)
-const tooltipStyle = ref({})
-
-const updateTooltipPosition = () => {
-  if (!infoIconRef.value) return
-
-  const rect = infoIconRef.value.getBoundingClientRect()
-  tooltipStyle.value = {
-    left: `${rect.left + rect.width / 2}px`,
-    top: `${rect.bottom + 8}px`,
-    transform: 'translateX(-50%)'
-  }
-}
+// ============================================================
+// Lifecycle
+// ============================================================
 
 onMounted(async () => {
   await loadAllStocks()
@@ -523,6 +659,14 @@ onMounted(async () => {
   }
 })
 
-const { isInWatchlist, toggleWatchlist } = useWatchlist()
+onUnmounted(() => {
+  if (abortController) abortController.abort()
+  if (chart) chart.destroy()
+})
 
+// ============================================================
+// Watchlist Integration
+// ============================================================
+
+const { isInWatchlist, toggleWatchlist } = useWatchlist()
 </script>
