@@ -102,31 +102,24 @@
               <UIcon
                   :name="isInWatchlist(symbol) ? 'i-lucide-star' : 'i-lucide-star-off'"
                   :class="[
-                  isInWatchlist(symbol) ? 'text-yellow-500' : 'text-gray-400',
-                  'transition-all duration-300 ease-in-out'
-                ]"
+              isInWatchlist(symbol) ? 'text-yellow-500' : 'text-gray-400',
+              'transition-all duration-300 ease-in-out'
+            ]"
                   class="w-5 h-5 cursor-pointer hover:scale-110 active:scale-95"
                   @click="toggleWatchlist({ symbol: symbol, name: currentCompanyName })"
               />
             </div>
+
+            <!-- ✨ Performance nur für ausgewählten Zeitraum -->
             <div class="flex gap-6 text-sm">
               <div>
-                <span class="text-gray-500">Tag:</span>
-                <span :class="getPerformanceColor(performanceMetrics.day)" class="ml-2 font-semibold">
-                  {{ performanceMetrics.day !== null ? `${performanceMetrics.day}%` : '–' }}
-                </span>
-              </div>
-              <div>
-                <span class="text-gray-500">Monat:</span>
-                <span :class="getPerformanceColor(performanceMetrics.month)" class="ml-2 font-semibold">
-                  {{ performanceMetrics.month !== null ? `${performanceMetrics.month}%` : '–' }}
-                </span>
-              </div>
-              <div>
-                <span class="text-gray-500">Jahr:</span>
-                <span :class="getPerformanceColor(performanceMetrics.year)" class="ml-2 font-semibold">
-                  {{ performanceMetrics.year !== null ? `${performanceMetrics.year}%` : '–' }}
-                </span>
+                <span class="text-gray-500">{{ getTimeRangeLabel }}:</span>
+                <span
+                    :class="getPerformanceColor(performanceMetrics.selected)"
+                    class="ml-2 font-semibold text-lg"
+                >
+            {{ performanceMetrics.selected !== null ? `${performanceMetrics.selected}%` : '–' }}
+          </span>
               </div>
             </div>
           </div>
@@ -222,30 +215,26 @@ const currentCompanyName = computed(() => {
 })
 
 const performanceMetrics = computed(() => {
-  const prices = filteredHistoricalData.value // ← Diese Zeile ändern!
+  const prices = filteredHistoricalData.value
 
   if (prices.length === 0) {
-    return { day: null, month: null, year: null }
+    return { selected: null }
   }
 
   const currentPrice = prices[prices.length - 1]?.price
+  if (!currentPrice) return { selected: null }
 
-  if (!currentPrice) return { day: null, month: null, year: null }
+  const startPrice = prices[0]?.price
+  if (!startPrice) return { selected: null }
 
-  const calculatePerformance = (startPrice) => {
-    if (!startPrice) return null
-    return (((currentPrice - startPrice) / startPrice) * 100).toFixed(2)
-  }
+  const performance = (((currentPrice - startPrice) / startPrice) * 100).toFixed(2)
 
-  return {
-    day: prices.length >= 2
-        ? calculatePerformance(prices[prices.length - 2]?.price)
-        : null,
-    month: prices.length >= 20
-        ? calculatePerformance(prices[Math.max(0, prices.length - 20)]?.price)
-        : null,
-    year: calculatePerformance(prices[0]?.price)
-  }
+  return { selected: performance }
+})
+
+const getTimeRangeLabel = computed(() => {
+  const range = timeRanges.find(r => r.value === selectedTimeRange.value)
+  return range?.label || 'Zeitraum'
 })
 
 // ✨ Gefilterte Daten basierend auf selectedTimeRange
