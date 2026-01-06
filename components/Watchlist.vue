@@ -1,164 +1,261 @@
 <template>
   <div class="space-y-6">
+    <!-- Portfolio Overview Card -->
     <UCard>
       <template #header>
-        <div class="flex justify-between items-center">
-          <h1 class="text-2xl font-bold">Meine Watchlist</h1>
-          <div class="flex items-center gap-3">
-            <UButton
-                @click="currency = currency === 'USD' ? 'EUR' : 'USD'"
-                size="lg"
-                variant="soft"
-            >
-              {{ currency }}
-            </UButton>
-            <UBadge color="primary" variant="soft" size="lg">
-              {{ watchlistCount }} {{ watchlistCount === 1 ? 'Aktie' : 'Aktien' }}
-            </UBadge>
-          </div>
-        </div>
+        <h2 class="text-2xl font-bold">Portfolio Übersicht</h2>
       </template>
 
-      <!-- Leere-State -->
-      <div v-if="watchlistCount === 0" class="text-center py-12">
-        <UIcon name="i-lucide-star-off" class="w-16 h-16 text-gray-300 mx-auto mb-4" />
-        <h3 class="text-lg font-semibold text-gray-600 mb-2">Noch keine Favoriten</h3>
-        <p class="text-gray-500 mb-4">
-          Füge Aktien zu deiner Watchlist hinzu, indem du auf den Stern klickst
-        </p>
-        <UButton to="/stock-charts" icon="i-lucide-trending-up">
-          Zu den Charts
-        </UButton>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="flex flex-col gap-2">
+          <span class="text-sm text-gray-500">Gesamtwert</span>
+          <span class="text-3xl font-bold text-primary">
+            {{ totalValue.toFixed(2) }} {{ getCurrencySymbol() }}
+          </span>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <span class="text-sm text-gray-500">Performance ({{ getTimeRangeLabel }})</span>
+          <span
+              :class="getPerformanceColor(portfolioPerformance)"
+              class="text-3xl font-bold flex items-center gap-2"
+          >
+            <UIcon
+                :name="portfolioPerformance >= 0 ? 'i-lucide-trending-up' : 'i-lucide-trending-down'"
+                class="w-6 h-6"
+            />
+            {{ portfolioPerformance !== null ? `${portfolioPerformance}%` : '–' }}
+          </span>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <span class="text-sm text-gray-500">Anzahl Aktien</span>
+          <span class="text-3xl font-bold">{{ watchlistItems.length }}</span>
+        </div>
       </div>
 
-      <!-- Watchlist Grid -->
-      <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <!-- Liste -->
-        <div class="space-y-3">
-          <h3 class="text-lg font-semibold mb-4">Alle Favoriten</h3>
-          <div class="space-y-2 max-h-[600px] overflow-y-auto pr-2">
-            <div
-                v-for="item in watchlistWithData"
-                :key="item.symbol"
-                @click="selectStock(item)"
-                :class="[
-                  'p-4 rounded-lg border-2 transition-all cursor-pointer',
-                  selectedSymbol === item.symbol
-                    ? 'border-primary bg-primary/5'
-                    : 'border-gray-200 dark:border-gray-700 hover:border-primary/50'
-                ]"
-            >
-              <div class="flex justify-between items-start mb-2">
-                <div>
-                  <h4 class="font-semibold">{{ item.name }}</h4>
-                  <p class="text-sm text-gray-500">{{ item.symbol }}</p>
-                </div>
-                <UButton
-                    @click.stop="removeFromWatchlist(item.symbol)"
-                    icon="i-lucide-trash-2"
-                    color="red"
-                    variant="ghost"
-                    size="xs"
+      <!-- ✨ Zeitraum-Toggle -->
+      <div class="flex gap-2 mt-6">
+        <UButton
+            v-for="range in timeRanges"
+            :key="range.value"
+            @click="selectedTimeRange = range.value"
+            :variant="selectedTimeRange === range.value ? 'solid' : 'soft'"
+            size="sm"
+        >
+          {{ range.label }}
+        </UButton>
+      </div>
+    </UCard>
+
+    <!-- Individual Stock Cards -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <UCard v-for="item in watchlistItems" :key="item.symbol">
+        <template #header>
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-3">
+              <h3 class="text-lg font-semibold">{{ item.name }}</h3>
+              <UBadge size="sm" color="gray">{{ item.symbol }}</UBadge>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <!-- Performance -->
+              <div
+                  :class="getPerformanceColor(stockPerformance[item.symbol])"
+                  class="font-bold text-lg flex items-center gap-1"
+              >
+                <UIcon
+                    :name="stockPerformance[item.symbol] >= 0 ? 'i-lucide-trending-up' : 'i-lucide-trending-down'"
+                    class="w-4 h-4"
                 />
+                {{ stockPerformance[item.symbol] !== null ? `${stockPerformance[item.symbol]}%` : '–' }}
               </div>
 
-              <!-- Kurs + Performance -->
-              <div v-if="item.data" class="flex justify-between items-end">
-                <div>
-                  <span class="text-2xl font-bold">
-                    {{ convertPrice(item.data.currentPrice) }} {{ getCurrencySymbol() }}
-                  </span>
-                </div>
-                <div :class="[
-                  'text-sm font-semibold',
-                  item.data.dayPerformance >= 0 ? 'text-green-500' : 'text-red-500'
-                ]">
-                  <UIcon
-                      :name="item.data.dayPerformance >= 0 ? 'i-lucide-trending-up' : 'i-lucide-trending-down'"
-                      class="w-4 h-4 inline"
-                  />
-                  {{ item.data.dayPerformance >= 0 ? '+' : '' }}{{ item.data.dayPerformance }}%
-                </div>
-              </div>
-
-              <!-- Loading State -->
-              <div v-else class="flex items-center gap-2 text-gray-500">
-                <UIcon name="i-lucide-loader-2" class="w-4 h-4 animate-spin" />
-                <span class="text-sm">Lade Kursdaten...</span>
-              </div>
+              <!-- Remove Button -->
+              <UButton
+                  @click="toggleWatchlist(item)"
+                  icon="i-lucide-trash-2"
+                  color="red"
+                  variant="soft"
+                  size="sm"
+              />
             </div>
           </div>
+        </template>
+
+        <div class="h-64">
+          <canvas :ref="(el) => { if (el) chartRefs[item.symbol] = el }"></canvas>
         </div>
 
-        <!-- Chart -->
-        <div>
-          <UCard v-if="selectedSymbol">
-            <template #header>
-              <div class="flex justify-between items-center">
-                <h3 class="text-lg font-semibold">
-                  {{ selectedStock?.name || selectedSymbol }}
-                </h3>
-                <UBadge>{{ selectedSymbol }}</UBadge>
-              </div>
-            </template>
-
-            <div class="h-[400px]">
-              <canvas ref="chartCanvas"></canvas>
-            </div>
-          </UCard>
-
-          <!-- Kein Chart ausgewählt -->
-          <div v-else class="flex flex-col items-center justify-center h-[400px] text-gray-400 border-2 border-dashed border-gray-300 rounded-lg">
-            <UIcon name="i-lucide-mouse-pointer-click" class="w-12 h-12 mb-4" />
-            <p>Wähle eine Aktie aus der Liste</p>
+        <template #footer>
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-gray-500">Aktueller Kurs:</span>
+            <span class="font-bold text-lg">
+              {{ currentPrices[item.symbol] || '–' }} {{ getCurrencySymbol() }}
+            </span>
           </div>
-        </div>
+        </template>
+      </UCard>
+    </div>
+
+    <!-- Empty State -->
+    <UCard v-if="watchlistItems.length === 0">
+      <div class="text-center py-12">
+        <UIcon name="i-lucide-star-off" class="w-16 h-16 mx-auto text-gray-400 mb-4" />
+        <h3 class="text-xl font-semibold mb-2">Keine Aktien in der Watchlist</h3>
+        <p class="text-gray-500 mb-6">Füge Aktien hinzu, um ihre Performance zu verfolgen</p>
+        <UButton to="/" icon="i-lucide-plus">
+          Aktien hinzufügen
+        </UButton>
       </div>
     </UCard>
   </div>
 </template>
 
-<script setup lang="ts">
-import { useRuntimeConfig } from "nuxt/app"
-import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
-import { useWatchlist } from "~/composables/useWatchlist"
+<script setup>
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 
 // ============================================================
-// Composables & State
+// State
 // ============================================================
 
-const config = useRuntimeConfig()
-const { watchlist, watchlistCount, removeFromWatchlist } = useWatchlist()
-const selectedSymbol = ref<string | null>(null)
-const stockData = ref<Record<string, any>>({})
-const chartCanvas = ref<HTMLCanvasElement | null>(null)
-const abortController = ref<AbortController | null>(null)
-
-// Currency State
+const { watchlist, toggleWatchlist } = useWatchlist()
+const chartRefs = ref({})
+const charts = ref({})
+const stockData = ref({})
 const currency = ref('USD')
 const exchangeRate = ref(1)
 
-let chart: any = null
+// ✨ Zeitraum-State
+const selectedTimeRange = ref(365) // Standard: 1 Jahr
+
+const timeRanges = [
+  { label: '30 Tage', value: 30 },
+  { label: '6 Monate', value: 180 },
+  { label: '1 Jahr', value: 365 },
+  { label: '3 Jahre', value: 1095 }
+]
 
 // ============================================================
-// Computed: Watchlist mit Live-Daten
+// Computed Properties
 // ============================================================
 
-const watchlistWithData = computed(() => {
-  return watchlist.value.map((item: { symbol: string; name: string }) => ({
-    ...item,
-    data: stockData.value[item.symbol] || null
-  }))
+const watchlistItems = computed(() => watchlist.value || [])
+
+const getTimeRangeLabel = computed(() => {
+  const range = timeRanges.find(r => r.value === selectedTimeRange.value)
+  return range?.label || 'Zeitraum'
 })
 
-const selectedStock = computed(() => {
-  return watchlist.value.find((item: { symbol: string; name: string }) =>
-      item.symbol === selectedSymbol.value
-  )
+// ✨ Gefilterte Daten pro Symbol
+const filteredStockData = computed(() => {
+  const result = {}
+
+  for (const symbol in stockData.value) {
+    const data = stockData.value[symbol]
+    if (!data?.length) continue
+
+    const today = new Date()
+    const startDate = new Date(today)
+
+    switch (selectedTimeRange.value) {
+      case 30:
+        startDate.setDate(today.getDate() - 30)
+        break
+      case 180:
+        startDate.setMonth(today.getMonth() - 6)
+        break
+      case 365:
+        startDate.setFullYear(today.getFullYear() - 1)
+        break
+      case 1095:
+        startDate.setFullYear(today.getFullYear() - 3)
+        break
+    }
+
+    result[symbol] = data.filter(p => {
+      const priceDate = new Date(p.date)
+      return priceDate >= startDate
+    })
+  }
+
+  return result
+})
+
+// ✨ Performance pro Symbol
+const stockPerformance = computed(() => {
+  const result = {}
+
+  for (const symbol in filteredStockData.value) {
+    const data = filteredStockData.value[symbol]
+    if (!data?.length) {
+      result[symbol] = null
+      continue
+    }
+
+    const startPrice = data[0]?.price
+    const endPrice = data[data.length - 1]?.price
+
+    if (!startPrice || !endPrice) {
+      result[symbol] = null
+      continue
+    }
+
+    result[symbol] = (((endPrice - startPrice) / startPrice) * 100).toFixed(2)
+  }
+
+  return result
+})
+
+// Portfolio-Performance
+const portfolioPerformance = computed(() => {
+  const performances = Object.values(stockPerformance.value).filter(p => p !== null)
+  if (performances.length === 0) return null
+
+  const avg = performances.reduce((sum, p) => sum + parseFloat(p), 0) / performances.length
+  return avg.toFixed(2)
+})
+
+// Aktueller Preis pro Symbol
+const currentPrices = computed(() => {
+  const result = {}
+  for (const symbol in filteredStockData.value) {
+    const data = filteredStockData.value[symbol]
+    if (data?.length) {
+      const lastPrice = data[data.length - 1]?.price
+      result[symbol] = lastPrice ? convertPrice(lastPrice) : null
+    }
+  }
+  return result
+})
+
+// Gesamtwert
+const totalValue = computed(() => {
+  return Object.values(currentPrices.value)
+      .filter(Boolean)
+      .reduce((sum, price) => sum + parseFloat(price), 0)
 })
 
 // ============================================================
-// Currency Helpers
+// Helper Functions
+// ============================================================
+
+const getPerformanceColor = (value) => {
+  if (value === null) return 'text-gray-500'
+  return parseFloat(value) >= 0 ? 'text-green-500' : 'text-red-500'
+}
+
+const convertPrice = (priceUSD) => {
+  if (currency.value === 'EUR') {
+    return (priceUSD * exchangeRate.value).toFixed(2)
+  }
+  return priceUSD.toFixed(2)
+}
+
+const getCurrencySymbol = () => currency.value === 'EUR' ? '€' : '$'
+
+// ============================================================
+// API Functions
 // ============================================================
 
 const fetchExchangeRate = async () => {
@@ -172,73 +269,43 @@ const fetchExchangeRate = async () => {
   }
 }
 
-const convertPrice = (priceUSD: number) => {
-  if (currency.value === 'EUR') {
-    return (priceUSD * exchangeRate.value).toFixed(2)
-  }
-  return priceUSD.toFixed(2)
-}
-
-const getCurrencySymbol = () => currency.value === 'EUR' ? '€' : '$'
-
-// ============================================================
-// API: Kursdaten laden
-// ============================================================
-
-const fetchStockData = async (symbol: string) => {
+const fetchStockData = async (symbol) => {
   try {
+    const config = useRuntimeConfig()
     const apiUrl = config.public.API_URL || 'http://localhost:8080'
-    const res = await fetch(`${apiUrl}/api/stocks/${encodeURIComponent(symbol)}`)
+    const url = `${apiUrl}/api/stocks/${encodeURIComponent(symbol)}`
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`)
-
+    const res = await fetch(url)
+    if (!res.ok) throw new Error(`${symbol}: HTTP ${res.status}`)
     const data = await res.json()
-    let rows = []
 
+    let rows = []
     if (Array.isArray(data?.historical)) rows = data.historical
     else if (Array.isArray(data?.data)) rows = data.data
-    else if (Array.isArray(data?.results)) rows = data.results
-    else if (
-        Array.isArray(data?.historicalStockList) &&
-        data.historicalStockList.length > 0 &&
-        Array.isArray(data.historicalStockList[0]?.historical)
-    ) {
+    else if (Array.isArray(data?.historicalStockList?.[0]?.historical)) {
       rows = data.historicalStockList[0].historical
     } else if (Array.isArray(data)) rows = data
 
     const norm = rows
-        .map((p: any) => {
-          const date = p.date || p.formattedDate || p.datetime || p.label || p.timestamp || null
-          const raw = p.close ?? p.adjClose ?? p.price ?? p.value ?? null
+        .map((p) => {
+          const date = p.date || p.formattedDate || p.datetime || null
+          const raw = p.close ?? p.adjClose ?? p.price ?? null
           const close = typeof raw === 'string' ? parseFloat(raw.replace(',', '.')) : raw
-          return { date, close }
+          return { date, price: close }
         })
-        .filter((p: any) => p.date && typeof p.close === 'number' && !isNaN(p.close))
+        .filter((p) => p.date && typeof p.price === 'number' && !isNaN(p.price))
 
-    if (!norm.length) return null
+    norm.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
 
-    norm.sort((a: any, b: any) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
-    const series = norm.slice(-360)
-
-    const currentPrice = series[series.length - 1]?.close || 0
-    const yesterdayPrice = series[series.length - 2]?.close || currentPrice
-    const dayPerformance = yesterdayPrice
-        ? (((currentPrice - yesterdayPrice) / yesterdayPrice) * 100).toFixed(2)
-        : '0.00'
-
-    return {
-      currentPrice,
-      dayPerformance: parseFloat(dayPerformance),
-      historical: series
-    }
+    return norm.slice(-1095) // Lade 3 Jahre Daten
   } catch (err) {
     console.error(`Fehler beim Laden von ${symbol}:`, err)
-    return null
+    return []
   }
 }
 
 // ============================================================
-// Chart-Logik
+// Chart Functions
 // ============================================================
 
 const loadChartJs = async () => {
@@ -258,28 +325,33 @@ const loadChartJs = async () => {
   return Chart
 }
 
-const renderChart = async (symbol: string, data: any) => {
-  if (!chartCanvas.value || !data?.historical) return
-
+const renderChart = async (symbol) => {
   const Chart = await loadChartJs()
-  const ctx = chartCanvas.value.getContext('2d')
+  const canvas = chartRefs.value[symbol]
+  if (!canvas) return
 
-  if (chart) chart.destroy()
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
 
-  const labels = data.historical.map((p: any) => p.date)
-  const values = data.historical.map((p: any) => p.close)
+  // Zerstöre alten Chart
+  if (charts.value[symbol]) {
+    charts.value[symbol].destroy()
+  }
 
-  // Konvertiere Werte basierend auf Currency
-  const convertedValues = values.map((v: number) => parseFloat(convertPrice(v)))
+  const data = filteredStockData.value[symbol] || []
+  if (!data.length) return
 
-  chart = new Chart(ctx!, {
+  const labels = data.map(p => p.date)
+  const values = data.map(p => convertPrice(p.price))
+
+  charts.value[symbol] = new Chart(ctx, {
     type: 'line',
     data: {
       labels,
       datasets: [
         {
           label: symbol,
-          data: convertedValues,
+          data: values,
           tension: 0.3,
           borderColor: 'rgb(5,99,241)',
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
@@ -295,12 +367,23 @@ const renderChart = async (symbol: string, data: any) => {
       maintainAspectRatio: false,
       interaction: { mode: 'nearest', intersect: false },
       plugins: {
-        legend: { display: true },
+        legend: { display: false },
         tooltip: {
-          enabled: true,
           callbacks: {
-            title: (items) => (items.length ? formatDate(items[0]?.label ?? '') : ''),
-            label: (ctx) => `${ctx.dataset.label}: ${ctx.parsed.y.toFixed(2)} ${getCurrencySymbol()}`
+            title: (items) => {
+              const rawDate = items[0]?.label
+              if (!rawDate) return ''
+              const d = new Date(rawDate)
+              return d.toLocaleDateString('de-DE', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+              })
+            },
+            label: (context) => {
+              const val = context.parsed.y
+              return `${symbol}: ${val} ${getCurrencySymbol()}`
+            }
           },
         },
       },
@@ -309,73 +392,70 @@ const renderChart = async (symbol: string, data: any) => {
           display: true,
           grid: { display: false },
           ticks: {
-            callback: (_: any, idx: number) => formatDate(labels[idx]),
-            maxRotation: 0,
+            maxRotation: 45,
+            minRotation: 45,
             autoSkip: true,
-          },
+            maxTicksLimit: 6,
+            callback: function(value) {
+              const date = this.getLabelForValue(value)
+              if (!date) return ''
+
+              const d = new Date(date)
+              if (isNaN(d)) return date
+
+              if (selectedTimeRange.value > 180) {
+                return d.toLocaleDateString('de-DE', {
+                  month: 'short',
+                  year: '2-digit'
+                })
+              }
+
+              return d.toLocaleDateString('de-DE', {
+                day: '2-digit',
+                month: '2-digit'
+              })
+            }
+          }
         },
         y: {
           display: true,
-          grid: { color: 'rgba(0, 0, 0, 0.05)' }
+          grid: { color: 'rgba(0, 0, 0, 0.05)' },
+          ticks: {
+            callback: function(value) {
+              return `${value} ${getCurrencySymbol()}`
+            }
+          }
         },
       },
     },
   })
 }
 
-// ============================================================
-// Actions
-// ============================================================
+const loadAllData = async () => {
+  const symbols = watchlistItems.value.map(item => item.symbol)
 
-const selectStock = async (item: { symbol: string; name: string }) => {
-  selectedSymbol.value = item.symbol
-
-  if (!stockData.value[item.symbol]) {
-    const data = await fetchStockData(item.symbol)
-    if (data) {
-      stockData.value[item.symbol] = data
-    }
+  for (const symbol of symbols) {
+    const data = await fetchStockData(symbol)
+    stockData.value[symbol] = data
+    await renderChart(symbol)
   }
-
-  // ✅ FIX: Warte bis DOM aktualisiert ist
-  await nextTick()
-  await renderChart(item.symbol, stockData.value[item.symbol])
-}
-
-const loadAllStockData = async () => {
-  for (const item of watchlist.value) {
-    if (!stockData.value[item.symbol]) {
-      const data = await fetchStockData(item.symbol)
-      if (data) {
-        stockData.value[item.symbol] = data
-      }
-    }
-  }
-}
-
-// ============================================================
-// Helpers
-// ============================================================
-
-const formatPrice = (price: number) => price?.toFixed(2) || '0.00'
-
-const formatDate = (yyyyMmDd: string) => {
-  if (!yyyyMmDd) return '-'
-  const d = new Date(yyyyMmDd)
-  if (isNaN(d.getTime())) return '-'
-  return new Intl.DateTimeFormat(undefined, {
-    month: '2-digit',
-    day: '2-digit'
-  }).format(d)
 }
 
 // ============================================================
 // Watchers
 // ============================================================
 
+// ✨ Neu-Rendern bei Zeitraum-Änderung
+watch(() => selectedTimeRange.value, async () => {
+  for (const symbol of watchlistItems.value.map(item => item.symbol)) {
+    await renderChart(symbol)
+  }
+})
+
+// Neu-Rendern bei Currency-Änderung
 watch(() => currency.value, async () => {
-  if (selectedSymbol.value && stockData.value[selectedSymbol.value]) {
-    await renderChart(selectedSymbol.value, stockData.value[selectedSymbol.value])
+  for (const symbol of watchlistItems.value.map(item => item.symbol)) {
+    await renderChart(symbol)
   }
 })
 
@@ -385,17 +465,12 @@ watch(() => currency.value, async () => {
 
 onMounted(async () => {
   await fetchExchangeRate()
-  await loadAllStockData()
-
-  if (watchlist.value.length > 0) {
-    // ✅ FIX: nextTick garantiert, dass Canvas existiert
-    await nextTick()
-    await selectStock(watchlist.value[0])
-  }
+  await loadAllData()
 })
 
 onUnmounted(() => {
-  if (abortController.value) abortController.value.abort()
-  if (chart) chart.destroy()
+  for (const chart of Object.values(charts.value)) {
+    if (chart) chart.destroy()
+  }
 })
 </script>
