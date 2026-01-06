@@ -1,36 +1,26 @@
 <template>
   <div class="space-y-6">
-    <!-- Portfolio Overview Card -->
+    <!-- Watchlist Overview Card -->
     <UCard>
       <template #header>
-        <h2 class="text-2xl font-bold">Portfolio Übersicht</h2>
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold">Meine Watchlist</h2>
+
+          <!-- ✨ Currency Toggle Button -->
+          <UButton
+              @click="currency = currency === 'USD' ? 'EUR' : 'USD'"
+              size="lg"
+              variant="soft"
+          >
+            {{ currency }}
+          </UButton>
+        </div>
       </template>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="flex flex-col gap-2">
-          <span class="text-sm text-gray-500">Gesamtwert</span>
-          <span class="text-3xl font-bold text-primary">
-            {{ totalValue.toFixed(2) }} {{ getCurrencySymbol() }}
-          </span>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <span class="text-sm text-gray-500">Performance ({{ getTimeRangeLabel }})</span>
-          <span
-              :class="getPerformanceColor(portfolioPerformance)"
-              class="text-3xl font-bold flex items-center gap-2"
-          >
-            <UIcon
-                :name="portfolioPerformance >= 0 ? 'i-lucide-trending-up' : 'i-lucide-trending-down'"
-                class="w-6 h-6"
-            />
-            {{ portfolioPerformance !== null ? `${portfolioPerformance}%` : '–' }}
-          </span>
-        </div>
-
-        <div class="flex flex-col gap-2">
-          <span class="text-sm text-gray-500">Anzahl Aktien</span>
-          <span class="text-3xl font-bold">{{ watchlistItems.length }}</span>
+        <div class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
+          <p class="text-sm text-gray-500 mb-1">Anzahl Aktien</p>
+          <p class="text-2xl font-bold">{{ watchlistItems.length }}</p>
         </div>
       </div>
 
@@ -53,47 +43,39 @@
       <UCard v-for="item in watchlistItems" :key="item.symbol">
         <template #header>
           <div class="flex justify-between items-center">
-            <div class="flex items-center gap-3">
+            <div>
               <h3 class="text-lg font-semibold">{{ item.name }}</h3>
-              <UBadge size="sm" color="gray">{{ item.symbol }}</UBadge>
+              <p class="text-sm text-gray-500">{{ item.symbol }}</p>
             </div>
 
-            <div class="flex items-center gap-3">
-              <!-- Performance -->
-              <div
+            <div class="text-right">
+              <p class="text-2xl font-bold">
+                {{ convertPrice(currentPrices[item.symbol] || 0) }} {{ getCurrencySymbol() }}
+              </p>
+              <p
                   :class="getPerformanceColor(stockPerformance[item.symbol])"
-                  class="font-bold text-lg flex items-center gap-1"
+                  class="text-sm font-semibold"
               >
-                <UIcon
-                    :name="stockPerformance[item.symbol] >= 0 ? 'i-lucide-trending-up' : 'i-lucide-trending-down'"
-                    class="w-4 h-4"
-                />
                 {{ stockPerformance[item.symbol] !== null ? `${stockPerformance[item.symbol]}%` : '–' }}
-              </div>
-
-              <!-- Remove Button -->
-              <UButton
-                  @click="toggleWatchlist(item)"
-                  icon="i-lucide-trash-2"
-                  color="red"
-                  variant="soft"
-                  size="sm"
-              />
+              </p>
             </div>
           </div>
         </template>
 
         <div class="h-64">
-          <canvas :ref="(el) => { if (el) chartRefs[item.symbol] = el }"></canvas>
+          <canvas :ref="el => { if (el) chartRefs[item.symbol] = el }"></canvas>
         </div>
 
         <template #footer>
-          <div class="flex justify-between items-center text-sm">
-            <span class="text-gray-500">Aktueller Kurs:</span>
-            <span class="font-bold text-lg">
-              {{ currentPrices[item.symbol] || '–' }} {{ getCurrencySymbol() }}
-            </span>
-          </div>
+          <UButton
+              @click="toggleWatchlist(item)"
+              color="red"
+              variant="soft"
+              size="sm"
+              block
+          >
+            Entfernen
+          </UButton>
         </template>
       </UCard>
     </div>
@@ -103,17 +85,14 @@
       <div class="text-center py-12">
         <UIcon name="i-lucide-star-off" class="w-16 h-16 mx-auto text-gray-400 mb-4" />
         <h3 class="text-xl font-semibold mb-2">Keine Aktien in der Watchlist</h3>
-        <p class="text-gray-500 mb-6">Füge Aktien hinzu, um ihre Performance zu verfolgen</p>
-        <UButton to="/" icon="i-lucide-plus">
-          Aktien hinzufügen
-        </UButton>
+        <p class="text-gray-500">Füge Aktien hinzu, um sie hier zu verfolgen</p>
       </div>
     </UCard>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
 
 // ============================================================
 // State
@@ -126,8 +105,7 @@ const stockData = ref({})
 const currency = ref('USD')
 const exchangeRate = ref(1)
 
-// ✨ Zeitraum-State
-const selectedTimeRange = ref(365) // Standard: 1 Jahr
+const selectedTimeRange = ref(365)
 
 const timeRanges = [
   { label: '30 Tage', value: 30 },
@@ -147,7 +125,6 @@ const getTimeRangeLabel = computed(() => {
   return range?.label || 'Zeitraum'
 })
 
-// ✨ Gefilterte Daten pro Symbol
 const filteredStockData = computed(() => {
   const result = {}
 
@@ -182,7 +159,6 @@ const filteredStockData = computed(() => {
   return result
 })
 
-// ✨ Performance pro Symbol
 const stockPerformance = computed(() => {
   const result = {}
 
@@ -207,7 +183,6 @@ const stockPerformance = computed(() => {
   return result
 })
 
-// Portfolio-Performance
 const portfolioPerformance = computed(() => {
   const performances = Object.values(stockPerformance.value).filter(p => p !== null)
   if (performances.length === 0) return null
@@ -216,20 +191,17 @@ const portfolioPerformance = computed(() => {
   return avg.toFixed(2)
 })
 
-// Aktueller Preis pro Symbol
 const currentPrices = computed(() => {
   const result = {}
   for (const symbol in filteredStockData.value) {
     const data = filteredStockData.value[symbol]
     if (data?.length) {
-      const lastPrice = data[data.length - 1]?.price
-      result[symbol] = lastPrice ? convertPrice(lastPrice) : null
+      result[symbol] = data[data.length - 1]?.price || 0
     }
   }
   return result
 })
 
-// Gesamtwert
 const totalValue = computed(() => {
   return Object.values(currentPrices.value)
       .filter(Boolean)
@@ -273,31 +245,34 @@ const fetchStockData = async (symbol) => {
   try {
     const config = useRuntimeConfig()
     const apiUrl = config.public.API_URL || 'http://localhost:8080'
-    const url = `${apiUrl}/api/stocks/${encodeURIComponent(symbol)}`
-
-    const res = await fetch(url)
-    if (!res.ok) throw new Error(`${symbol}: HTTP ${res.status}`)
+    const res = await fetch(`${apiUrl}/api/stocks/${encodeURIComponent(symbol)}`)
+    if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = await res.json()
 
     let rows = []
     if (Array.isArray(data?.historical)) rows = data.historical
     else if (Array.isArray(data?.data)) rows = data.data
-    else if (Array.isArray(data?.historicalStockList?.[0]?.historical)) {
+    else if (Array.isArray(data?.results)) rows = data.results
+    else if (
+        Array.isArray(data?.historicalStockList) &&
+        data.historicalStockList.length > 0 &&
+        Array.isArray(data.historicalStockList[0]?.historical)
+    ) {
       rows = data.historicalStockList[0].historical
     } else if (Array.isArray(data)) rows = data
 
     const norm = rows
         .map((p) => {
-          const date = p.date || p.formattedDate || p.datetime || null
-          const raw = p.close ?? p.adjClose ?? p.price ?? null
+          const date = p.date || p.formattedDate || p.datetime || p.label || p.timestamp || null
+          const raw = p.close ?? p.adjClose ?? p.price ?? p.value ?? null
           const close = typeof raw === 'string' ? parseFloat(raw.replace(',', '.')) : raw
           return { date, price: close }
         })
-        .filter((p) => p.date && typeof p.price === 'number' && !isNaN(p.price))
+        .filter((p) => p.date && typeof p.price === 'number' && !Number.isNaN(p.price))
 
     norm.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
 
-    return norm.slice(-1095) // Lade 3 Jahre Daten
+    return norm.slice(-1095)
   } catch (err) {
     console.error(`Fehler beim Laden von ${symbol}:`, err)
     return []
@@ -326,30 +301,34 @@ const loadChartJs = async () => {
 }
 
 const renderChart = async (symbol) => {
-  const Chart = await loadChartJs()
-  const canvas = chartRefs.value[symbol]
-  if (!canvas) return
+  try {
+    const Chart = await loadChartJs()
+    const canvas = chartRefs.value[symbol]
 
-  const ctx = canvas.getContext('2d')
-  if (!ctx) return
+    if (!canvas) return
 
-  // Zerstöre alten Chart
-  if (charts.value[symbol]) {
-    charts.value[symbol].destroy()
-  }
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
 
-  const data = filteredStockData.value[symbol] || []
-  if (!data.length) return
+    if (charts.value[symbol]) {
+      charts.value[symbol].stop()
+      charts.value[symbol].destroy()
+      delete charts.value[symbol]
+    }
 
-  const labels = data.map(p => p.date)
-  const values = data.map(p => convertPrice(p.price))
+    const data = filteredStockData.value[symbol] || []
+    if (!data.length) return
 
-  charts.value[symbol] = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [
-        {
+    const labels = data.map(p => p.date)
+    const values = data.map(p => parseFloat(convertPrice(p.price)))
+
+    if (labels.length === 0 || values.length === 0) return
+
+    charts.value[symbol] = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels,
+        datasets: [{
           label: symbol,
           data: values,
           tension: 0.3,
@@ -359,76 +338,76 @@ const renderChart = async (symbol) => {
           borderWidth: 2,
           pointRadius: 0,
           pointHoverRadius: 6,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'nearest', intersect: false },
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            title: (items) => {
-              const rawDate = items[0]?.label
-              if (!rawDate) return ''
-              const d = new Date(rawDate)
-              return d.toLocaleDateString('de-DE', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-              })
+        }],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        animation: { duration: 300 },
+        interaction: { mode: 'nearest', intersect: false },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            enabled: true,
+            callbacks: {
+              title: (items) => {
+                const rawDate = items[0]?.label
+                if (!rawDate) return ''
+                const d = new Date(rawDate)
+                return d.toLocaleDateString('de-DE')
+              },
+              label: (context) => {
+                const val = context.parsed.y
+                return `${symbol}: ${val.toFixed(2)} ${getCurrencySymbol()}`
+              }
             },
-            label: (context) => {
-              const val = context.parsed.y
-              return `${symbol}: ${val} ${getCurrencySymbol()}`
+          },
+        },
+        scales: {
+          x: {
+            display: true,
+            grid: { display: false },
+            ticks: {
+              maxRotation: 45,
+              minRotation: 45,
+              autoSkip: true,
+              maxTicksLimit: 6,
+              callback: function(value) {
+                const date = this.getLabelForValue(value)
+                if (!date) return ''
+
+                const d = new Date(date)
+                if (isNaN(d)) return date
+
+                if (selectedTimeRange.value > 180) {
+                  return d.toLocaleDateString('de-DE', {
+                    month: 'short',
+                    year: '2-digit'
+                  })
+                }
+
+                return d.toLocaleDateString('de-DE', {
+                  day: '2-digit',
+                  month: '2-digit'
+                })
+              }
+            }
+          },
+          y: {
+            display: true,
+            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+            ticks: {
+              callback: function(value) {
+                return `${value.toFixed(0)} ${getCurrencySymbol()}`
+              }
             }
           },
         },
       },
-      scales: {
-        x: {
-          display: true,
-          grid: { display: false },
-          ticks: {
-            maxRotation: 45,
-            minRotation: 45,
-            autoSkip: true,
-            maxTicksLimit: 6,
-            callback: function(value) {
-              const date = this.getLabelForValue(value)
-              if (!date) return ''
-
-              const d = new Date(date)
-              if (isNaN(d)) return date
-
-              if (selectedTimeRange.value > 180) {
-                return d.toLocaleDateString('de-DE', {
-                  month: 'short',
-                  year: '2-digit'
-                })
-              }
-
-              return d.toLocaleDateString('de-DE', {
-                day: '2-digit',
-                month: '2-digit'
-              })
-            }
-          }
-        },
-        y: {
-          display: true,
-          grid: { color: 'rgba(0, 0, 0, 0.05)' },
-          ticks: {
-            callback: function(value) {
-              return `${value} ${getCurrencySymbol()}`
-            }
-          }
-        },
-      },
-    },
-  })
+    })
+  } catch (error) {
+    console.error(`❌ FEHLER in renderChart(${symbol}):`, error)
+  }
 }
 
 const loadAllData = async () => {
@@ -437,7 +416,13 @@ const loadAllData = async () => {
   for (const symbol of symbols) {
     const data = await fetchStockData(symbol)
     stockData.value[symbol] = data
+  }
+
+  await nextTick()
+
+  for (const symbol of symbols) {
     await renderChart(symbol)
+    await new Promise(resolve => setTimeout(resolve, 50))
   }
 }
 
@@ -445,18 +430,36 @@ const loadAllData = async () => {
 // Watchers
 // ============================================================
 
-// ✨ Neu-Rendern bei Zeitraum-Änderung
+let renderTimeout = null
+
 watch(() => selectedTimeRange.value, async () => {
-  for (const symbol of watchlistItems.value.map(item => item.symbol)) {
-    await renderChart(symbol)
-  }
+  if (renderTimeout) clearTimeout(renderTimeout)
+
+  renderTimeout = setTimeout(async () => {
+    await nextTick()
+
+    const symbols = watchlistItems.value.map(item => item.symbol)
+
+    for (const symbol of symbols) {
+      await renderChart(symbol)
+      await new Promise(resolve => setTimeout(resolve, 50))
+    }
+  }, 150)
 })
 
-// Neu-Rendern bei Currency-Änderung
 watch(() => currency.value, async () => {
-  for (const symbol of watchlistItems.value.map(item => item.symbol)) {
-    await renderChart(symbol)
-  }
+  if (renderTimeout) clearTimeout(renderTimeout)
+
+  renderTimeout = setTimeout(async () => {
+    await nextTick()
+
+    const symbols = watchlistItems.value.map(item => item.symbol)
+
+    for (const symbol of symbols) {
+      await renderChart(symbol)
+      await new Promise(resolve => setTimeout(resolve, 50))
+    }
+  }, 150)
 })
 
 // ============================================================
@@ -469,8 +472,19 @@ onMounted(async () => {
 })
 
 onUnmounted(() => {
+  if (renderTimeout) {
+    clearTimeout(renderTimeout)
+  }
+
   for (const chart of Object.values(charts.value)) {
-    if (chart) chart.destroy()
+    if (chart) {
+      try {
+        chart.stop()
+        chart.destroy()
+      } catch (e) {
+        console.error('Fehler beim Chart-Cleanup:', e)
+      }
+    }
   }
 })
 </script>

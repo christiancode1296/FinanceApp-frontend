@@ -193,7 +193,7 @@ const showTooltip = ref(false)
 const tooltipStyle = ref({})
 
 // ✨ Zeitraum-State
-const selectedTimeRange = ref(365) // Standard: 1 Jahr
+const selectedTimeRange = ref(365)
 
 const timeRanges = [
   { label: '30 Tage', value: 30 },
@@ -202,8 +202,8 @@ const timeRanges = [
   { label: '3 Jahre', value: 1095 }
 ]
 
-let chart
-let abortController
+let chart = null
+let abortController = null
 
 // ============================================================
 // Computed Properties
@@ -237,14 +237,11 @@ const getTimeRangeLabel = computed(() => {
   return range?.label || 'Zeitraum'
 })
 
-// ✨ Gefilterte Daten basierend auf selectedTimeRange
 const filteredHistoricalData = computed(() => {
   if (!allHistoricalPrices.value.length) return []
 
   const data = allHistoricalPrices.value
   const today = new Date()
-
-  // ✨ Berechne Start-Datum basierend auf Kalendertagen
   const startDate = new Date(today)
 
   switch (selectedTimeRange.value) {
@@ -262,25 +259,14 @@ const filteredHistoricalData = computed(() => {
       break
   }
 
-  // ✨ Filtere nach Datum, nicht nach Array-Position
   const filtered = data.filter(p => {
     const priceDate = new Date(p.date)
     return priceDate >= startDate
   })
 
-  console.log('🔎 Gefilterte Daten:', {
-    zeitraum: `${selectedTimeRange.value} Tage`,
-    startDatum: startDate.toISOString().split('T')[0],
-    endDatum: today.toISOString().split('T')[0],
-    gefilterteTage: filtered.length,
-    ersterTag: filtered[0]?.date,
-    letzterTag: filtered[filtered.length - 1]?.date
-  })
-
   return filtered
 })
 
-// ✨ Chart-Daten mit Currency-Konvertierung
 const chartData = computed(() => {
   return filteredHistoricalData.value.map(p => ({
     date: p.date,
@@ -399,7 +385,6 @@ const fetchSeries = async (sym) => {
 
     norm.sort((a, b) => (a.date < b.date ? -1 : a.date > b.date ? 1 : 0))
 
-    // ✨ Lade 3 Jahre Daten für Time-Range-Filter
     const series = norm.slice(-1095)
     const labels = series.map((p) => p.date)
     const values = series.map((p) => p.close)
@@ -473,19 +458,11 @@ const reload = async () => {
     const validLabels = labels.slice(-minLength)
     const validValues = values.slice(-minLength)
 
-    console.log('🔍 API-Daten:', {
-      ersterTag: labels[0],
-      letzterTag: labels[labels.length - 1],
-      anzahlTage: labels.length
-    })
-
-    // Speichere ALLE Kurse für Performance-Berechnung
     allHistoricalPrices.value = validLabels.map((date, i) => ({
       date,
       price: validValues[i]
     }))
 
-    // Nur die letzten 5 für die Anzeige
     const lastEntries = validLabels
         .map((date, i) => {
           const price = validValues[i]
@@ -501,7 +478,6 @@ const reload = async () => {
     await renderChart()
   } catch (e) {
     errorMsg.value = e.message || String(e)
-    await renderChart()
   } finally {
     loading.value = false
   }
@@ -510,19 +486,19 @@ const reload = async () => {
 const renderChart = async () => {
   const Chart = await loadChartJs()
   const ctx = chartCanvas.value?.getContext("2d")
+
   if (!ctx) return
 
-  if (chart) chart.destroy()
+  // ✅ Sicher Chart zerstören
+  if (chart) {
+    chart.destroy()
+    chart = null
+  }
 
   const labels = chartData.value.map(p => p.date)
   const values = chartData.value.map(p => p.price)
 
-  console.log('📊 Chart rendert:', {
-    zeitraum: selectedTimeRange.value,
-    ersterTag: labels[0],
-    letzterTag: labels[labels.length - 1],
-    anzahlPunkte: labels.length
-  })
+  if (labels.length === 0 || values.length === 0) return
 
   chart = new Chart(ctx, {
     type: "line",
@@ -555,11 +531,7 @@ const renderChart = async () => {
               const rawDate = items[0]?.label
               if (!rawDate) return ''
               const d = new Date(rawDate)
-              return d.toLocaleDateString('de-DE', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-              })
+              return d.toLocaleDateString('de-DE')
             },
             label: (context) => {
               const val = context.parsed.y
@@ -577,7 +549,7 @@ const renderChart = async () => {
             minRotation: 45,
             autoSkip: true,
             maxTicksLimit: 8,
-            callback: function(value, index) {
+            callback: function(value) {
               const date = this.getLabelForValue(value)
               if (!date) return ''
 
@@ -613,15 +585,13 @@ const renderChart = async () => {
 }
 
 // ============================================================
-// Watchers
+// Watchers - NUR EINMAL!
 // ============================================================
 
-// ✨ Watch für Zeitraum-Änderung
 watch(() => selectedTimeRange.value, async () => {
   await renderChart()
 })
 
-// Watch für Currency-Änderung
 watch(() => currency.value, async () => {
   await renderChart()
 })
@@ -635,7 +605,6 @@ onMounted(async () => {
   await fetchExchangeRate()
   await reload()
 
-  // Event-Listener für Tooltip
   const icon = infoIconRef.value?.querySelector('.group')
   if (icon) {
     icon.addEventListener('mouseenter', () => {
