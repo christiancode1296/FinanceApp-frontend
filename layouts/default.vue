@@ -29,10 +29,10 @@ const items: NavigationMenuItem[] = [
   <div>
     <UHeader>
       <template #title>
-        <span class="font-bold">
+        <NuxtLink to="/" class="font-bold flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer">
           <UIcon name="i-humbleicons:activity" class="size-8" />
-          stock overflow
-        </span>
+          <span>stock overflow</span>
+        </NuxtLink>
       </template>
 
       <UNavigationMenu :items="items" />

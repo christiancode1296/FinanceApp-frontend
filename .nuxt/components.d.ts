@@ -19,6 +19,7 @@ export const StockCharts: typeof import("../components/StockCharts.vue")['defaul
 export const StockSearch: typeof import("../components/StockSearch.vue")['default']
 export const Test: typeof import("../components/Test.vue")['default']
 export const Watchlist: typeof import("../components/Watchlist.vue")['default']
+export const Welcome: typeof import("../components/Welcome.vue")['default']
 export const UColorModeAvatarDVue: typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.d.vue")['default']
 export const UColorModeAvatar: typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue")['default']
 export const UColorModeButtonDVue: typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeButton.d.vue")['default']
@@ -280,6 +281,7 @@ export const LazyStockCharts: LazyComponent<typeof import("../components/StockCh
 export const LazyStockSearch: LazyComponent<typeof import("../components/StockSearch.vue")['default']>
 export const LazyTest: LazyComponent<typeof import("../components/Test.vue")['default']>
 export const LazyWatchlist: LazyComponent<typeof import("../components/Watchlist.vue")['default']>
+export const LazyWelcome: LazyComponent<typeof import("../components/Welcome.vue")['default']>
 export const LazyUColorModeAvatarDVue: LazyComponent<typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.d.vue")['default']>
 export const LazyUColorModeAvatar: LazyComponent<typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue")['default']>
 export const LazyUColorModeButtonDVue: LazyComponent<typeof import("../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeButton.d.vue")['default']>

@@ -19,6 +19,7 @@ interface _GlobalComponents {
   'StockSearch': typeof import("../../components/StockSearch.vue")['default']
   'Test': typeof import("../../components/Test.vue")['default']
   'Watchlist': typeof import("../../components/Watchlist.vue")['default']
+  'Welcome': typeof import("../../components/Welcome.vue")['default']
   'UColorModeAvatarDVue': typeof import("../../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.d.vue")['default']
   'UColorModeAvatar': typeof import("../../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue")['default']
   'UColorModeButtonDVue': typeof import("../../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeButton.d.vue")['default']
@@ -280,6 +281,7 @@ interface _GlobalComponents {
   'LazyStockSearch': LazyComponent<typeof import("../../components/StockSearch.vue")['default']>
   'LazyTest': LazyComponent<typeof import("../../components/Test.vue")['default']>
   'LazyWatchlist': LazyComponent<typeof import("../../components/Watchlist.vue")['default']>
+  'LazyWelcome': LazyComponent<typeof import("../../components/Welcome.vue")['default']>
   'LazyUColorModeAvatarDVue': LazyComponent<typeof import("../../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.d.vue")['default']>
   'LazyUColorModeAvatar': LazyComponent<typeof import("../../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue")['default']>
   'LazyUColorModeButtonDVue': LazyComponent<typeof import("../../node_modules/.pnpm/@nuxt+ui@4.1.0_@babel+parser@7.28.5_axios@1.13.1_db0@0.3.4_embla-carousel@8.6.0_ioredis_a01dd4d85b313980ecafc79d753b70b9/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeButton.d.vue")['default']>

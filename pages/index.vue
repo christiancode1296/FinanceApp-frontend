@@ -1,26 +1,33 @@
 <template>
   <div>
-    <StockCharts />
+    <!-- Zeige immer die Welcome-Seite auf der Startseite -->
+    <Welcome @start="handleStart" />
   </div>
 </template>
 
 <script setup>
-import axios from 'axios'
-import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 definePageMeta({
   layout: 'default'
 })
 
-const stocks = ref([])
-const apiUrl = useRuntimeConfig().public.API_URL
+// ============================================================
+// Composables
+// ============================================================
 
-onMounted(async () => {
-  try {
-    const res = await axios.get(`${apiUrl}/api/stocks/AAPL`)
-    stocks.value = res.data
-  } catch (err) {
-    console.error('Fehler beim Laden der Aktien:', err)
-  }
-})
+const router = useRouter()
+
+// ============================================================
+// Functions
+// ============================================================
+
+/**
+ * Wird aufgerufen, wenn User auf "Jetzt starten" klickt
+ * Navigiert zur Stocks-Seite (Suche)
+ */
+const handleStart = () => {
+  // Navigiere zur Suche-Seite
+  router.push('/stocks')
+}
 </script>
