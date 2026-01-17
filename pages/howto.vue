@@ -1,5 +1,9 @@
 <script setup lang="ts">
+const goToLogin = () => {
+  navigateTo('/login', { external: true })
+}
 </script>
+
 <template>
   <div class="container mx-auto px-4 py-8">
     <UCard class="shadow-2xl">
@@ -79,12 +83,12 @@
 
         <div class="text-center pt-4">
           <UButton
-              @click="$router.push('/stocks')"
+              @click="goToLogin"
               size="lg"
               color="primary"
               class="px-8"
           >
-            Zur Aktiensuche
+            Jetzt anmelden
             <UIcon name="i-lucide-arrow-right" class="ml-2 w-5 h-5" />
           </UButton>
         </div>

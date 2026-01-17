@@ -67,7 +67,7 @@
 
           <div class="pt-8">
             <UButton
-                @click="$router.push('/login')"
+                @click="goToLogin"
                 size="xl"
                 color="primary"
                 class="px-12 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all"
@@ -93,3 +93,11 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { navigateTo } from "nuxt/app";
+
+const goToLogin = () => {
+  navigateTo('/login', { external: true })
+}
+</script>

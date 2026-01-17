@@ -29,4 +29,7 @@ export default defineNuxtConfig({
     css: [
         '@/assets/css/main.css'
     ],
+    plugins: [
+        { src: '~/plugins/okta.client.ts', mode: 'client' }
+    ]
 })

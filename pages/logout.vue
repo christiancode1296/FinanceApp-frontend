@@ -57,7 +57,9 @@
 </template>
 
 <script setup lang="ts">
+import { navigateTo } from "nuxt/app"
 import { ref } from 'vue'
+import { useRouter } from "vue-router"
 
 const router = useRouter()
 const isLoggingOut = ref(false)
@@ -76,7 +78,7 @@ const handleLogout = async () => {
     await new Promise(resolve => setTimeout(resolve, 500))
 
     // Weiterleitung zur Startseite
-    router.push('/')
+    navigateTo('/', { external: true })
   } catch (error) {
     console.error('Logout-Fehler:', error)
   } finally {

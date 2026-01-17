@@ -31,6 +31,7 @@ export { setInterval } from '#app/compat/interval';
 export { BulletLegendItemInterface, CurveType, LegendPosition, Orientation, DonutType } from '../node_modules/.pnpm/nuxt-charts@1.0.2_magicast@0.5.1_vue@3.5.26_typescript@5.9.3_/node_modules/nuxt-charts/dist/runtime/vue-chrts';
 export { definePageMeta } from '../node_modules/.pnpm/nuxt@4.2.2_@parcel+watcher@2.5.4_@vue+compiler-sfc@3.5.26_cac@6.7.14_db0@0.3.4_eslint@9_bd12f3db9fb0357f95f63c54828dbf37/node_modules/nuxt/dist/pages/runtime/composables';
 export { defineLazyHydrationComponent } from '#app/composables/lazy-hydration';
+export { useAuth } from '../composables/useAuth';
 export { useWatchlist } from '../composables/useWatchlist';
 export { defineLocale, extendLocale } from '../node_modules/.pnpm/@nuxt+ui@4.3.0_@babel+parser@7.28.6_@floating-ui+dom@1.7.4_@tiptap+extension-drag-handl_fa62ce9140c4173c1e6a3b1a39f60ea5/node_modules/@nuxt/ui/dist/runtime/composables/defineLocale';
 export { extractShortcuts, defineShortcuts } from '../node_modules/.pnpm/@nuxt+ui@4.3.0_@babel+parser@7.28.6_@floating-ui+dom@1.7.4_@tiptap+extension-drag-handl_fa62ce9140c4173c1e6a3b1a39f60ea5/node_modules/@nuxt/ui/dist/runtime/composables/defineShortcuts';

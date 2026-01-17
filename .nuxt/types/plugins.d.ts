@@ -24,7 +24,8 @@ type NuxtAppInjections =
   InjectionType<typeof import("../../node_modules/@nuxtjs/color-mode/dist/runtime/plugin.client.js")> &
   InjectionType<typeof import("../../node_modules/@nuxt/icon/dist/runtime/plugin.js")> &
   InjectionType<typeof import("../../node_modules/.pnpm/nuxt@4.2.2_@parcel+watcher@2.5.4_@vue+compiler-sfc@3.5.26_cac@6.7.14_db0@0.3.4_eslint@9_bd12f3db9fb0357f95f63c54828dbf37/node_modules/nuxt/dist/app/plugins/warn.dev.server.js")> &
-  InjectionType<typeof import("../../node_modules/.pnpm/nuxt@4.2.2_@parcel+watcher@2.5.4_@vue+compiler-sfc@3.5.26_cac@6.7.14_db0@0.3.4_eslint@9_bd12f3db9fb0357f95f63c54828dbf37/node_modules/nuxt/dist/app/plugins/check-if-layout-used.js")>
+  InjectionType<typeof import("../../node_modules/.pnpm/nuxt@4.2.2_@parcel+watcher@2.5.4_@vue+compiler-sfc@3.5.26_cac@6.7.14_db0@0.3.4_eslint@9_bd12f3db9fb0357f95f63c54828dbf37/node_modules/nuxt/dist/app/plugins/check-if-layout-used.js")> &
+  InjectionType<typeof import("../../plugins/okta.client")>
 
 declare module '#app' {
   interface NuxtApp extends NuxtAppInjections { }

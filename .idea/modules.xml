@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/FinanceApp-frontend.iml" filepath="$PROJECT_DIR$/.idea/FinanceApp-frontend.iml" />
       <module fileurl="file://$PROJECT_DIR$/composables/composables.iml" filepath="$PROJECT_DIR$/composables/composables.iml" />
       <module fileurl="file://$PROJECT_DIR$/middleware/middleware.iml" filepath="$PROJECT_DIR$/middleware/middleware.iml" />
+      <module fileurl="file://$PROJECT_DIR$/plugins/plugins.iml" filepath="$PROJECT_DIR$/plugins/plugins.iml" />
     </modules>
   </component>
 </project>

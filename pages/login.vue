@@ -23,7 +23,7 @@
 import { onMounted } from 'vue'
 import OktaSignIn from '@okta/okta-signin-widget'
 import '@okta/okta-signin-widget/css/okta-sign-in.min.css'
-import {useRouter, useRuntimeConfig } from "nuxt/app"
+import {navigateTo, useRouter, useRuntimeConfig } from "nuxt/app"
 
 const router = useRouter()
 const config = useRuntimeConfig()
@@ -45,10 +45,15 @@ onMounted(() => {
     console.log('✅ Login erfolgreich:', tokens)
     localStorage.setItem('okta-token-storage', JSON.stringify(tokens))
     signIn.remove()
-    router.push('/stocks')
+    navigateTo('/stocks', {external: true})
   }).catch((error) => {
     console.error('❌ Login-Fehler:', error)
   })
 })
+
+
+function definePageMeta(arg0: { key: (route: { fullPath: any }) => any }) {
+    throw new Error("Function not implemented.")
+}
 </script>
 

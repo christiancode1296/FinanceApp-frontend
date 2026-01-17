@@ -119,6 +119,7 @@ declare global {
   const useAppConfig: typeof import('../../node_modules/.pnpm/nuxt@4.2.2_@parcel+watcher@2.5.4_@vue+compiler-sfc@3.5.26_cac@6.7.14_db0@0.3.4_eslint@9_bd12f3db9fb0357f95f63c54828dbf37/node_modules/nuxt/dist/app/config').useAppConfig
   const useAsyncData: typeof import('../../node_modules/.pnpm/nuxt@4.2.2_@parcel+watcher@2.5.4_@vue+compiler-sfc@3.5.26_cac@6.7.14_db0@0.3.4_eslint@9_bd12f3db9fb0357f95f63c54828dbf37/node_modules/nuxt/dist/app/composables/asyncData').useAsyncData
   const useAttrs: typeof import('vue').useAttrs
+  const useAuth: typeof import('../../composables/useAuth').useAuth
   const useAvatarGroup: typeof import('../../node_modules/.pnpm/@nuxt+ui@4.3.0_@babel+parser@7.28.6_@floating-ui+dom@1.7.4_@tiptap+extension-drag-handl_fa62ce9140c4173c1e6a3b1a39f60ea5/node_modules/@nuxt/ui/dist/runtime/composables/useAvatarGroup').useAvatarGroup
   const useColorMode: typeof import('../../node_modules/@nuxtjs/color-mode/dist/runtime/composables').useColorMode
   const useComponentIcons: typeof import('../../node_modules/.pnpm/@nuxt+ui@4.3.0_@babel+parser@7.28.6_@floating-ui+dom@1.7.4_@tiptap+extension-drag-handl_fa62ce9140c4173c1e6a3b1a39f60ea5/node_modules/@nuxt/ui/dist/runtime/composables/useComponentIcons').useComponentIcons
@@ -345,6 +346,7 @@ declare module 'vue' {
     readonly useAppConfig: UnwrapRef<typeof import('../../node_modules/.pnpm/nuxt@4.2.2_@parcel+watcher@2.5.4_@vue+compiler-sfc@3.5.26_cac@6.7.14_db0@0.3.4_eslint@9_bd12f3db9fb0357f95f63c54828dbf37/node_modules/nuxt/dist/app/config')['useAppConfig']>
     readonly useAsyncData: UnwrapRef<typeof import('../../node_modules/.pnpm/nuxt@4.2.2_@parcel+watcher@2.5.4_@vue+compiler-sfc@3.5.26_cac@6.7.14_db0@0.3.4_eslint@9_bd12f3db9fb0357f95f63c54828dbf37/node_modules/nuxt/dist/app/composables/asyncData')['useAsyncData']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
+    readonly useAuth: UnwrapRef<typeof import('../../composables/useAuth')['useAuth']>
     readonly useAvatarGroup: UnwrapRef<typeof import('../../node_modules/.pnpm/@nuxt+ui@4.3.0_@babel+parser@7.28.6_@floating-ui+dom@1.7.4_@tiptap+extension-drag-handl_fa62ce9140c4173c1e6a3b1a39f60ea5/node_modules/@nuxt/ui/dist/runtime/composables/useAvatarGroup')['useAvatarGroup']>
     readonly useColorMode: UnwrapRef<typeof import('../../node_modules/@nuxtjs/color-mode/dist/runtime/composables')['useColorMode']>
     readonly useComponentIcons: UnwrapRef<typeof import('../../node_modules/.pnpm/@nuxt+ui@4.3.0_@babel+parser@7.28.6_@floating-ui+dom@1.7.4_@tiptap+extension-drag-handl_fa62ce9140c4173c1e6a3b1a39f60ea5/node_modules/@nuxt/ui/dist/runtime/composables/useComponentIcons')['useComponentIcons']>

@@ -25,7 +25,7 @@ import { RuntimeConfig as UserRuntimeConfig, PublicRuntimeConfig as UserPublicRu
 
    oktaIssuer: string,
 
-   apiUrl: string,
+   API_URL: string,
   }
 declare module '@nuxt/schema' {
   interface RuntimeConfig extends UserRuntimeConfig {}

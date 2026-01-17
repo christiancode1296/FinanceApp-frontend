@@ -957,7 +957,7 @@ const _inlineRuntimeConfig = {
     "oktaBaseUrl": "integrator-7219975.okta.com",
     "oktaClientId": "0oaz2z1rjnImBxsOA697",
     "oktaIssuer": "https://integrator-7219975.okta.com/oauth2/default",
-    "apiUrl": "https://stockoverflow-backend-1.onrender.com"
+    "API_URL": "http://localhost:8080"
   },
   "icon": {
     "serverKnownCssClasses": []
