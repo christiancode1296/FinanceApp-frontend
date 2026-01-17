@@ -1,6 +1,8 @@
 import ViteTsconfigPaths from 'vite-tsconfig-paths'
 import { process } from 'std-env'
 
+// @ts-ignore
+// @ts-ignore
 export default defineNuxtConfig({
     ssr: false,
 
@@ -16,7 +18,8 @@ export default defineNuxtConfig({
         public: {
             oktaBaseUrl: process.env.OKTA_BASE_URL,
             oktaClientId: process.env.OKTA_CLIENT_ID,
-            oktaIssuer: process.env.OKTA_ISSUER
+            oktaIssuer: process.env.OKTA_ISSUER,
+            apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:8080',
         }
     },
     modules: [
