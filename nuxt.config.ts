@@ -14,7 +14,9 @@ export default defineNuxtConfig({
 
     runtimeConfig: {
         public: {
-            API_URL: process.env.NUXT_PUBLIC_API_URL
+            oktaBaseUrl: process.env.OKTA_BASE_URL,
+            oktaClientId: process.env.OKTA_CLIENT_ID,
+            oktaIssuer: process.env.OKTA_ISSUER
         }
     },
     modules: [

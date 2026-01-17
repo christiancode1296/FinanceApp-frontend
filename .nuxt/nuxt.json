@@ -1,9 +1,9 @@
 {
-  "_hash": "9Ar5DxhnA68r6uSajrz3fge2GuDjZclm19knpqDnUnY",
+  "_hash": "6IXgAleFrAkvoCei1SX1i75JSpyLbgNNazIB4BB8U-s",
   "project": {
     "rootDir": "/Users/christian/IdeaProjects/FinanceApp-frontend"
   },
   "versions": {
-    "nuxt": "4.2.0"
+    "nuxt": "4.2.2"
   }
 }

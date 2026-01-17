@@ -7,3 +7,7 @@
 @theme {
     --font-sans: 'Public Sans', sans-serif;
 }
+
+#okta-signin-container:not(.modal-open) {
+    display: none !important;
+}

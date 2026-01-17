@@ -1,40 +1,41 @@
 import process from 'node:process';globalThis._importMeta_={url:import.meta.url,env:process.env};import { tmpdir } from 'node:os';
-import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getQuery as getQuery$1, readBody, getResponseStatus, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getRouterParam, getResponseStatusText } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/h3@1.15.4/node_modules/h3/dist/index.mjs';
+import { defineEventHandler, handleCacheHeaders, splitCookiesString, createEvent, fetchWithEvent, isEvent, eventHandler, setHeaders, sendRedirect, proxyRequest, getRequestHeader, setResponseHeaders, setResponseStatus, send, getRequestHeaders, setResponseHeader, appendResponseHeader, getRequestURL, getResponseHeader, removeResponseHeader, createError, getQuery as getQuery$1, readBody, getResponseStatus, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getRouterParam, getResponseStatusText } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/h3/dist/index.mjs';
 import { Server } from 'node:http';
 import { resolve, dirname, join } from 'node:path';
 import nodeCrypto from 'node:crypto';
 import { parentPort, threadId } from 'node:worker_threads';
-import { escapeHtml } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/@vue+shared@3.5.22/node_modules/@vue/shared/dist/shared.cjs.js';
-import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/vue-bundle-renderer@2.2.0/node_modules/vue-bundle-renderer/dist/runtime.mjs';
-import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/ufo@1.6.1/node_modules/ufo/dist/index.mjs';
-import destr, { destr as destr$1 } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/destr@2.0.5/node_modules/destr/dist/index.mjs';
-import { createHooks } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/hookable@5.5.3/node_modules/hookable/dist/index.mjs';
-import { createFetch, Headers as Headers$1 } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/ofetch@1.5.1/node_modules/ofetch/dist/node.mjs';
-import { fetchNodeRequestHandler, callNodeRequestHandler } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/node-mock-http@1.0.3/node_modules/node-mock-http/dist/index.mjs';
-import { createStorage, prefixStorage } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/unstorage@1.17.2_db0@0.3.4_ioredis@5.8.2/node_modules/unstorage/dist/index.mjs';
-import unstorage_47drivers_47fs from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/unstorage@1.17.2_db0@0.3.4_ioredis@5.8.2/node_modules/unstorage/drivers/fs.mjs';
-import { digest, hash as hash$1 } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/ohash@2.0.11/node_modules/ohash/dist/index.mjs';
-import { klona } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/klona@2.0.6/node_modules/klona/dist/index.mjs';
-import defu, { defuFn } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/defu@6.1.4/node_modules/defu/dist/defu.mjs';
-import { snakeCase } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/scule@1.3.0/node_modules/scule/dist/index.mjs';
-import { getContext } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/unctx@2.4.1/node_modules/unctx/dist/index.mjs';
-import { toRouteMatcher, createRouter } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/radix3@1.1.2/node_modules/radix3/dist/index.mjs';
+import { escapeHtml } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/@vue/shared/dist/shared.cjs.js';
+import { createRenderer, getRequestDependencies, getPreloadLinks, getPrefetchLinks } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/vue-bundle-renderer/dist/runtime.mjs';
+import { parseURL, withoutBase, joinURL, getQuery, withQuery, withTrailingSlash, decodePath, withLeadingSlash, withoutTrailingSlash, joinRelativeURL } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/ufo/dist/index.mjs';
+import destr, { destr as destr$1 } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/destr/dist/index.mjs';
+import { createHooks } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/hookable/dist/index.mjs';
+import { createFetch, Headers as Headers$1 } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/ofetch/dist/node.mjs';
+import { fetchNodeRequestHandler, callNodeRequestHandler } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/node-mock-http/dist/index.mjs';
+import { createStorage, prefixStorage } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/unstorage/dist/index.mjs';
+import unstorage_47drivers_47fs from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/unstorage/drivers/fs.mjs';
+import { digest, hash as hash$1 } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/ohash/dist/index.mjs';
+import { klona } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/klona/dist/index.mjs';
+import defu, { defuFn } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/defu/dist/defu.mjs';
+import { snakeCase } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/scule/dist/index.mjs';
+import { getContext } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/unctx/dist/index.mjs';
+import { toRouteMatcher, createRouter } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/radix3/dist/index.mjs';
 import { readFile } from 'node:fs/promises';
-import consola, { consola as consola$1 } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/consola@3.4.2/node_modules/consola/dist/index.mjs';
-import { ErrorParser } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/youch-core@0.3.3/node_modules/youch-core/build/index.js';
-import { Youch } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/youch@4.1.0-beta.11/node_modules/youch/build/index.js';
-import { SourceMapConsumer } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/source-map@0.7.6/node_modules/source-map/source-map.js';
+import consola, { consola as consola$1 } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/consola/dist/index.mjs';
+import { ErrorParser } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/youch-core/build/index.js';
+import { Youch } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/youch/build/index.js';
+import { SourceMapConsumer } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/source-map/source-map.js';
 import { AsyncLocalStorage } from 'node:async_hooks';
-import { stringify, uneval } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/devalue@5.4.2/node_modules/devalue/index.js';
-import { captureRawStackTrace, parseRawStackTrace } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/errx@0.1.0/node_modules/errx/dist/index.js';
-import { isVNode, toValue, isRef } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/vue@3.5.22_typescript@5.9.3/node_modules/vue/index.mjs';
+import { stringify, uneval } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/devalue/index.js';
+import { captureRawStackTrace, parseRawStackTrace } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/errx/dist/index.js';
+import { isVNode, toValue, isRef } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/vue@3.5.26_typescript@5.9.3/node_modules/vue/index.mjs';
 import { promises } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { dirname as dirname$1, resolve as resolve$1, basename } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/pathe@2.0.3/node_modules/pathe/dist/index.mjs';
-import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/unhead@2.0.19/node_modules/unhead/dist/server.mjs';
-import { renderToString } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/vue@3.5.22_typescript@5.9.3/node_modules/vue/server-renderer/index.mjs';
-import { walkResolver } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/unhead@2.0.19/node_modules/unhead/dist/utils.mjs';
-import { getIcons } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/@iconify+utils@3.0.2/node_modules/@iconify/utils/lib/index.js';
+import { dirname as dirname$1, resolve as resolve$1, basename } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/pathe/dist/index.mjs';
+import { createHead as createHead$1, propsToString, renderSSRHead } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/unhead/dist/server.mjs';
+import process$1 from 'node:process';
+import { renderToString } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/.pnpm/vue@3.5.26_typescript@5.9.3/node_modules/vue/server-renderer/index.mjs';
+import { walkResolver } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/unhead/dist/utils.mjs';
+import { getIcons } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/node_modules/@iconify/utils/lib/index.js';
 import { collections } from 'file:///Users/christian/IdeaProjects/FinanceApp-frontend/.nuxt/nuxt-icon-server-bundle.mjs';
 
 const serverAssets = [{"baseName":"server","dir":"/Users/christian/IdeaProjects/FinanceApp-frontend/server/assets"}];
@@ -606,6 +607,7 @@ const inlineAppConfig = {
       "copy": "i-lucide-copy",
       "copyCheck": "i-lucide-copy-check",
       "dark": "i-lucide-moon",
+      "drag": "i-lucide-grip-vertical",
       "ellipsis": "i-lucide-ellipsis",
       "error": "i-lucide-circle-x",
       "external": "i-lucide-arrow-up-right",
@@ -631,6 +633,9 @@ const inlineAppConfig = {
       "tip": "i-lucide-lightbulb",
       "upload": "i-lucide-upload",
       "warning": "i-lucide-triangle-alert"
+    },
+    "tv": {
+      "twMergeConfig": {}
     }
   },
   "icon": {
@@ -672,13 +677,17 @@ const inlineAppConfig = {
       "circle-flags",
       "circum",
       "clarity",
+      "codex",
       "codicon",
       "covid",
       "cryptocurrency",
       "cryptocurrency-color",
+      "cuida",
       "dashicons",
       "devicon",
       "devicon-plain",
+      "dinkie-icons",
+      "duo-icons",
       "ei",
       "el",
       "emojione",
@@ -698,7 +707,11 @@ const inlineAppConfig = {
       "fa6-brands",
       "fa6-regular",
       "fa6-solid",
+      "fa7-brands",
+      "fa7-regular",
+      "fa7-solid",
       "fad",
+      "famicons",
       "fe",
       "feather",
       "file-icons",
@@ -708,6 +721,7 @@ const inlineAppConfig = {
       "flat-ui",
       "flowbite",
       "fluent",
+      "fluent-color",
       "fluent-emoji",
       "fluent-emoji-flat",
       "fluent-emoji-high-contrast",
@@ -719,6 +733,7 @@ const inlineAppConfig = {
       "fxemoji",
       "gala",
       "game-icons",
+      "garden",
       "geo",
       "gg",
       "gis",
@@ -744,12 +759,15 @@ const inlineAppConfig = {
       "il",
       "ion",
       "iwwa",
+      "ix",
       "jam",
       "la",
       "lets-icons",
       "line-md",
+      "lineicons",
       "logos",
       "ls",
+      "lsicon",
       "lucide",
       "lucide-lab",
       "mage",
@@ -757,6 +775,7 @@ const inlineAppConfig = {
       "maki",
       "map",
       "marketeq",
+      "material-icon-theme",
       "material-symbols",
       "material-symbols-light",
       "mdi",
@@ -764,6 +783,7 @@ const inlineAppConfig = {
       "medical-icon",
       "memory",
       "meteocons",
+      "meteor-icons",
       "mi",
       "mingcute",
       "mono-icons",
@@ -772,6 +792,7 @@ const inlineAppConfig = {
       "nonicons",
       "noto",
       "noto-v1",
+      "nrk",
       "octicon",
       "oi",
       "ooui",
@@ -783,27 +804,54 @@ const inlineAppConfig = {
       "pepicons-pop",
       "pepicons-print",
       "ph",
+      "picon",
+      "pixel",
       "pixelarticons",
       "prime",
+      "proicons",
       "ps",
+      "qlementine-icons",
       "quill",
       "radix-icons",
       "raphael",
       "ri",
       "rivet-icons",
+      "roentgen",
+      "si",
       "si-glyph",
+      "sidekickicons",
       "simple-icons",
       "simple-line-icons",
       "skill-icons",
       "solar",
+      "stash",
       "streamline",
+      "streamline-block",
+      "streamline-color",
+      "streamline-cyber",
+      "streamline-cyber-color",
       "streamline-emojis",
+      "streamline-flex",
+      "streamline-flex-color",
+      "streamline-freehand",
+      "streamline-freehand-color",
+      "streamline-kameleon-color",
+      "streamline-logos",
+      "streamline-pixel",
+      "streamline-plump",
+      "streamline-plump-color",
+      "streamline-sharp",
+      "streamline-sharp-color",
+      "streamline-stickies-color",
+      "streamline-ultimate",
+      "streamline-ultimate-color",
       "subway",
       "svg-spinners",
       "system-uicons",
       "tabler",
       "tdesign",
       "teenyicons",
+      "temaki",
       "token",
       "token-branded",
       "topcoat",
@@ -906,7 +954,9 @@ const _inlineRuntimeConfig = {
     }
   },
   "public": {
-    "API_URL": ""
+    "oktaBaseUrl": "integrator-7219975.okta.com",
+    "oktaClientId": "0oaz2z1rjnImBxsOA697",
+    "oktaIssuer": "https://integrator-7219975.okta.com/oauth2/default"
   },
   "icon": {
     "serverKnownCssClasses": []
@@ -1232,6 +1282,7 @@ const errorCSS = (
   top: 0;
   width: 100vw;
   height: 100vh;
+  border: none;
   z-index: var(--z-base);
 }
 #frame[inert] {
@@ -1293,7 +1344,7 @@ const errorCSS = (
 }
 `
 );
-function webComponentScript(base64HTML) {
+function webComponentScript(base64HTML, startMinimized) {
   return (
     /* js */
     `
@@ -1387,6 +1438,11 @@ function webComponentScript(base64HTML) {
       shadow.appendChild(preview);
       shadow.appendChild(button);
       
+      if (${startMinimized}) {
+        iframe.setAttribute('inert', '');
+        button.setAttribute('aria-expanded', 'false');
+      }
+      
       // Initialize preview
       setTimeout(updatePreview, 100);
       
@@ -1397,14 +1453,14 @@ function webComponentScript(base64HTML) {
   `
   );
 }
-function generateErrorOverlayHTML(html) {
+function generateErrorOverlayHTML(html, options) {
   const nonce = Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, "0")).join("");
   const errorPage = html.replace("<head>", `<head><script>${iframeStorageBridge(nonce)}<\/script>`);
   const base64HTML = Buffer.from(errorPage, "utf8").toString("base64");
   return `
     <script>${parentStorageBridge(nonce)}<\/script>
     <nuxt-error-overlay></nuxt-error-overlay>
-    <script>${webComponentScript(base64HTML)}<\/script>
+    <script>${webComponentScript(base64HTML, options?.startMinimized ?? false)}<\/script>
   `;
 }
 
@@ -1460,10 +1516,11 @@ const errorHandler$0 = (async function errorhandler(error, event, { defaultHandl
     setResponseHeader(event, header, value);
   }
   setResponseStatus(event, res.status && res.status !== 200 ? res.status : defaultRes.status, res.statusText || defaultRes.statusText);
-  {
+  if (!globalThis._importMeta_.test && typeof html === "string") {
     const prettyResponse = await defaultHandler(error, event, { json: false });
-    return send(event, html.replace("</body>", `${generateErrorOverlayHTML(prettyResponse.body)}</body>`));
+    return send(event, html.replace("</body>", `${generateErrorOverlayHTML(prettyResponse.body, { startMinimized: 300 <= statusCode && statusCode < 500 })}</body>`));
   }
+  return send(event, html);
 });
 
 function defineNitroErrorHandler(handler) {
@@ -1512,7 +1569,7 @@ async function defaultHandler(error, event, opts) {
       ansiError
     );
   }
-  const useJSON = opts?.json || !getRequestHeader(event, "accept")?.includes("text/html");
+  const useJSON = opts?.json ?? !getRequestHeader(event, "accept")?.includes("text/html");
   const headers = {
     "content-type": useJSON ? "application/json" : "text/html",
     // Prevent browser from guessing the MIME types of resources.
@@ -1617,7 +1674,7 @@ if (!window.__NUXT_DEVTOOLS_TIME_METRIC__) {
 window.__NUXT_DEVTOOLS_TIME_METRIC__.appInit = Date.now()
 `;
 
-const _q8gbpLnM6lbiShJW8Q7dGls_ZZaV6UbbOU1hrXNsUPY = (function(nitro) {
+const _AFZitQoCcMb84nQ8RYYNelQt6zX1q6Gfx8KedEeKk_U = (function(nitro) {
   nitro.hooks.hook("render:html", (htmlContext) => {
     htmlContext.head.push(`<script>${script$1}<\/script>`);
   });
@@ -1646,7 +1703,7 @@ const devReducers = {
   URL: (data) => data instanceof URL ? data.toString() : void 0
 };
 const asyncContext = getContext("nuxt-dev", { asyncContext: true, AsyncLocalStorage });
-const _Qc8ltCzXPuH8q5skELI9LRrW51hs0MpDawiF6ZQavM = (nitroApp) => {
+const _pR0LUOYtHyAVZyOTF3AAEfpL2aiOjxeJmMHIOITsyQc = (nitroApp) => {
   const handler = nitroApp.h3App.handler;
   nitroApp.h3App.handler = (event) => {
     return asyncContext.callAsync({ logs: [], event }, () => handler(event));
@@ -1717,16 +1774,16 @@ function onConsoleLog(callback) {
 
 const script = "\"use strict\";(()=>{const t=window,e=document.documentElement,c=[\"dark\",\"light\"],n=getStorageValue(\"localStorage\",\"nuxt-color-mode\")||\"system\";let i=n===\"system\"?u():n;const r=e.getAttribute(\"data-color-mode-forced\");r&&(i=r),l(i),t[\"__NUXT_COLOR_MODE__\"]={preference:n,value:i,getColorScheme:u,addColorScheme:l,removeColorScheme:d};function l(o){const s=\"\"+o+\"\",a=\"\";e.classList?e.classList.add(s):e.className+=\" \"+s,a&&e.setAttribute(\"data-\"+a,o)}function d(o){const s=\"\"+o+\"\",a=\"\";e.classList?e.classList.remove(s):e.className=e.className.replace(new RegExp(s,\"g\"),\"\"),a&&e.removeAttribute(\"data-\"+a)}function f(o){return t.matchMedia(\"(prefers-color-scheme\"+o+\")\")}function u(){if(t.matchMedia&&f(\"\").media!==\"not all\"){for(const o of c)if(f(\":\"+o).matches)return o}return\"light\"}})();function getStorageValue(t,e){switch(t){case\"localStorage\":return window.localStorage.getItem(e);case\"sessionStorage\":return window.sessionStorage.getItem(e);case\"cookie\":return getCookie(e);default:return null}}function getCookie(t){const c=(\"; \"+window.document.cookie).split(\"; \"+t+\"=\");if(c.length===2)return c.pop()?.split(\";\").shift()}";
 
-const _VkUWMultC5JMHVvuAfuQpn2Cn2FaIT9UbwuPZHTEjU = (function(nitro) {
+const _YW2Ca0Mj8Jd1LggxzkHeAQleEdgFVeYaRpIhrpXVxU = (function(nitro) {
   nitro.hooks.hook("render:html", (htmlContext) => {
     htmlContext.head.push(`<script>${script}<\/script>`);
   });
 });
 
 const plugins = [
-  _q8gbpLnM6lbiShJW8Q7dGls_ZZaV6UbbOU1hrXNsUPY,
-_Qc8ltCzXPuH8q5skELI9LRrW51hs0MpDawiF6ZQavM,
-_VkUWMultC5JMHVvuAfuQpn2Cn2FaIT9UbwuPZHTEjU
+  _AFZitQoCcMb84nQ8RYYNelQt6zX1q6Gfx8KedEeKk_U,
+_pR0LUOYtHyAVZyOTF3AAEfpL2aiOjxeJmMHIOITsyQc,
+_YW2Ca0Mj8Jd1LggxzkHeAQleEdgFVeYaRpIhrpXVxU
 ];
 
 const assets = {};
@@ -1754,7 +1811,7 @@ function getAsset (id) {
 
 const METHODS = /* @__PURE__ */ new Set(["HEAD", "GET"]);
 const EncodingMap = { gzip: ".gz", br: ".br" };
-const _fNr6xI = eventHandler((event) => {
+const _uYUCmI = eventHandler((event) => {
   if (event.method && !METHODS.has(event.method)) {
     return;
   }
@@ -1769,9 +1826,6 @@ const _fNr6xI = eventHandler((event) => {
     ...encodingHeader.split(",").map((e) => EncodingMap[e.trim()]).filter(Boolean).sort(),
     ""
   ];
-  if (encodings.length > 1) {
-    appendResponseHeader(event, "Vary", "Accept-Encoding");
-  }
   for (const encoding of encodings) {
     for (const _id of [id + encoding, joinURL(id, "index.html" + encoding)]) {
       const _asset = getAsset(_id);
@@ -1788,6 +1842,9 @@ const _fNr6xI = eventHandler((event) => {
       throw createError({ statusCode: 404 });
     }
     return;
+  }
+  if (asset.encoding !== void 0) {
+    appendResponseHeader(event, "Vary", "Accept-Encoding");
   }
   const ifNotMatch = getRequestHeader(event, "if-none-match") === asset.etag;
   if (ifNotMatch) {
@@ -1906,7 +1963,7 @@ const getSSRRenderer = lazyCachedFunction(async () => {
   });
   async function renderToString$1(input, context) {
     const html = await renderToString(input, context);
-    if (process.env.NUXT_VITE_NODE_OPTIONS) {
+    if (process$1.env.NUXT_VITE_NODE_OPTIONS) {
       renderer.rendererContext.updateManifest(await getClientManifest());
     }
     return APP_ROOT_OPEN_TAG + html + APP_ROOT_CLOSE_TAG;
@@ -2217,7 +2274,7 @@ async function runTask(name, {
 
 const warnOnceSet = /* @__PURE__ */ new Set();
 const DEFAULT_ENDPOINT = "https://api.iconify.design";
-const _C7bmHO = defineCachedEventHandler(async (event) => {
+const _Z7r2aB = defineCachedEventHandler(async (event) => {
   const url = getRequestURL(event);
   if (!url)
     return createError({ status: 400, message: "Invalid icon request" });
@@ -2275,15 +2332,15 @@ const _C7bmHO = defineCachedEventHandler(async (event) => {
   // 1 week
 });
 
-const _lazy_l4Z6ny = () => Promise.resolve().then(function () { return renderer$1; });
+const _lazy_JkLFrV = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
-  { route: '', handler: _fNr6xI, lazy: false, middleware: true, method: undefined },
-  { route: '/__nuxt_error', handler: _lazy_l4Z6ny, lazy: true, middleware: false, method: undefined },
+  { route: '', handler: _uYUCmI, lazy: false, middleware: true, method: undefined },
+  { route: '/__nuxt_error', handler: _lazy_JkLFrV, lazy: true, middleware: false, method: undefined },
   { route: '/__nuxt_island/**', handler: _SxA8c9, lazy: false, middleware: false, method: undefined },
-  { route: '/api/_nuxt_icon/:collection', handler: _C7bmHO, lazy: false, middleware: false, method: undefined },
-  { route: '/_fonts/**', handler: _lazy_l4Z6ny, lazy: true, middleware: false, method: undefined },
-  { route: '/**', handler: _lazy_l4Z6ny, lazy: true, middleware: false, method: undefined }
+  { route: '/api/_nuxt_icon/:collection', handler: _Z7r2aB, lazy: false, middleware: false, method: undefined },
+  { route: '/_fonts/**', handler: _lazy_JkLFrV, lazy: true, middleware: false, method: undefined },
+  { route: '/**', handler: _lazy_JkLFrV, lazy: true, middleware: false, method: undefined }
 ];
 
 function createNitroApp() {
@@ -2428,7 +2485,7 @@ function useNitroApp() {
 runNitroPlugins(nitroApp$1);
 
 if (!globalThis.crypto) {
-  globalThis.crypto = nodeCrypto;
+  globalThis.crypto = nodeCrypto.webcrypto;
 }
 const { NITRO_NO_UNIX_SOCKET, NITRO_DEV_WORKER_ID } = process.env;
 trapUnhandledNodeErrors();

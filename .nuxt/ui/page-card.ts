@@ -52,7 +52,7 @@ export default {
     },
     "reverse": {
       "true": {
-        "wrapper": "lg:order-last"
+        "wrapper": "order-last"
       }
     },
     "variant": {
@@ -84,6 +84,7 @@ export default {
     "to": {
       "true": {
         "root": [
+          "has-focus-visible:ring-2 has-focus-visible:ring-primary",
           "transition"
         ]
       }
@@ -262,12 +263,6 @@ export default {
       "spotlight": true,
       "class": {
         "root": "[--spotlight-color:var(--ui-bg-inverted)]"
-      }
-    },
-    {
-      "to": true,
-      "class": {
-        "root": "has-focus-visible:ring-2 has-focus-visible:ring-primary"
       }
     }
   ],

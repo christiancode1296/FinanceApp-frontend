@@ -12,8 +12,13 @@
   },
   "dependencies": {
     "@nuxt/ui": "^4.1.0",
+    "@okta/okta-auth-js": "^7.14.1",
+    "@okta/okta-signin-widget": "^7.39.2",
+    "@okta/okta-vue": "^5.8.0",
     "axios": "^1.13.1",
     "chart.js": "^4.5.1",
+    "install": "^0.13.0",
+    "npm": "^11.7.0",
     "nuxt": "^4.2.0",
     "nuxt-charts": "^1.0.2",
     "std-env": "^3.10.0",

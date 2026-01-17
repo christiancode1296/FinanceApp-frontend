@@ -13,13 +13,13 @@ const items: NavigationMenuItem[] = [
     icon: 'i-humbleicons:pie-chart'
   },
   {
-    label: 'How To',
+    label: 'Guide',
     to: '/howto',
     icon: 'i-humbleicons:info-circle',
   },
   {
     label: 'Abmelden',
-    to: '/abmelden',
+    to: '/logout',
     icon: 'i-humbleicons:logout',
   }
 ]
@@ -57,9 +57,18 @@ const items: NavigationMenuItem[] = [
       </template>
     </UHeader>
 
-    <!-- HIER FEHLT DER SLOT! -->
-    <main class="container mx-auto p-6">
+    <main>
       <slot />
     </main>
+
+    <footer class="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 mt-auto">
+      <div class="container mx-auto px-4 py-6">
+        <div class="text-center text-sm text-gray-600 dark:text-gray-400">
+          <p>© 2026 stock overflow - Deine persönliche Aktien-Watchlist</p>
+          <p>© Rami Eter und Christian Püschel </p>
+          <p> Projekt Webtechnologien HTW Berlin </p>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>

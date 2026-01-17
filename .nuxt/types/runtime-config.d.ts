@@ -19,7 +19,11 @@ import { RuntimeConfig as UserRuntimeConfig, PublicRuntimeConfig as UserPublicRu
    },
   }
   interface SharedPublicRuntimeConfig {
-   API_URL: string,
+   oktaBaseUrl: string,
+
+   oktaClientId: string,
+
+   oktaIssuer: string,
   }
 declare module '@nuxt/schema' {
   interface RuntimeConfig extends UserRuntimeConfig {}

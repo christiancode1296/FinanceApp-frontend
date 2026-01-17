@@ -1,4 +1,12 @@
+@source "/Users/christian/IdeaProjects/FinanceApp-frontend/**/*";
+@source inline("isolate");
 @source "./ui";
+
+@layer base {
+  body {
+    @apply antialiased text-default bg-default scheme-light dark:scheme-dark;
+  }
+}
 
 @theme static {
   --color-old-neutral-50: oklch(98.5% 0 0);

@@ -68,10 +68,11 @@ export default {
     "to": {
       "true": {
         "root": [
+          "has-focus-visible:ring-2 has-focus-visible:ring-primary",
           "transition"
         ],
         "image": "transform transition-transform duration-200 group-hover/blog-post:scale-110",
-        "avatar": "transform transition-transform duration-200 hover:scale-115"
+        "avatar": "transform transition-transform duration-200 hover:scale-115 focus-visible:outline-primary"
       }
     },
     "image": {
