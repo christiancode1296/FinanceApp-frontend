@@ -19,7 +19,7 @@ export default defineNuxtConfig({
             oktaBaseUrl: process.env.OKTA_BASE_URL,
             oktaClientId: process.env.OKTA_CLIENT_ID,
             oktaIssuer: process.env.OKTA_ISSUER,
-            apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:8080',
+            API_URL: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:8080',
         }
     },
     modules: [

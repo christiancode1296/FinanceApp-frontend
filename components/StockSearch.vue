@@ -14,7 +14,8 @@ const searchQuery = ref('')
 const allStocks = ref<Stock[]>([])
 const loading = ref(false)
 const config = useRuntimeConfig()
-const apiUrl = config.public.NUXT_PUBLIC_API_URL
+const apiUrl = config.public.API_URL
+
 
 // Favoriten aus localStorage laden
 const favorites = ref<Set<string>>(new Set(JSON.parse(localStorage.getItem('watchlist') || '[]')))

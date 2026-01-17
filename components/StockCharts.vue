@@ -321,7 +321,7 @@ const updateTooltipPosition = () => {
 const loadAllStocks = async () => {
   try {
     const config = useRuntimeConfig()
-    const apiUrl = config.public.NUXT_PUBLIC_API_URL || 'http://localhost:8080'
+    const apiUrl = config.public.API_URL || 'http://localhost:8080'
     const res = await fetch(`${apiUrl}/api/stocks/all`)
     if (!res.ok) throw new Error(`Fehler beim Laden der Aktienliste: HTTP ${res.status}`)
     const data = await res.json()
