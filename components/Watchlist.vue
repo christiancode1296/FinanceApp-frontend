@@ -93,17 +93,19 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch, nextTick } from 'vue'
+import { useWatchlist } from '@/composables/useWatchlist'
+import axios from "axios";
 
-// ============================================================
-// State
-// ============================================================
 
-const { watchlist, toggleWatchlist } = useWatchlist()
+
+const { watchlist, loadWatchlist, toggleWatchlist } = useWatchlist()
 const chartRefs = ref({})
 const charts = ref({})
 const stockData = ref({})
 const currency = ref('USD')
 const exchangeRate = ref(1)
+const allStocks = ref([])
+const loading = ref(false)
 
 const selectedTimeRange = ref(365)
 
@@ -117,6 +119,11 @@ const timeRanges = [
 // ============================================================
 // Computed Properties
 // ============================================================
+
+const currentCompanyName = computed(() => {
+  const stock = allStocks.value.find(s => s.symbol === symbol.value)
+  return stock ? `${stock.name} (${stock.symbol})` : symbol.value
+})
 
 const watchlistItems = computed(() => watchlist.value || [])
 
@@ -149,6 +156,7 @@ const filteredStockData = computed(() => {
         startDate.setFullYear(today.getFullYear() - 3)
         break
     }
+
 
     result[symbol] = data.filter(p => {
       const priceDate = new Date(p.date)
@@ -224,7 +232,8 @@ const convertPrice = (priceUSD) => {
   return priceUSD.toFixed(2)
 }
 
-const getCurrencySymbol = () => currency.value === 'EUR' ? '€' : '$'
+const getCurrencySymbol = () => (currency.value === 'EUR' ? '€' : '$')
+
 
 // ============================================================
 // API Functions
@@ -410,6 +419,21 @@ const renderChart = async (symbol) => {
   }
 }
 
+const loadAllStocks = async () => {
+  try {
+    const config = useRuntimeConfig()
+    const apiUrl = config.public.API_URL || 'http://localhost:8080'
+    const res = await fetch(`${apiUrl}/api/stocks/all`)
+    if (!res.ok) throw new Error(`Fehler beim Laden der Aktienliste: HTTP ${res.status}`)
+    const data = await res.json()
+    allStocks.value = Array.isArray(data) ? data : []
+  } catch (err) {
+    console.error(err)
+    allStocks.value = []
+  }
+}
+
+
 const loadAllData = async () => {
   const symbols = watchlistItems.value.map(item => item.symbol)
 
@@ -469,6 +493,7 @@ watch(() => currency.value, async () => {
 onMounted(async () => {
   await fetchExchangeRate()
   await loadAllData()
+  await loadWatchlist()
 })
 
 onUnmounted(() => {

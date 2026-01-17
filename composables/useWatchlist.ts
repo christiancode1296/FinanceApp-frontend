@@ -1,10 +1,16 @@
+import axios from 'axios'
+import { useAuth } from '@okta/okta-vue'
+import { useRuntimeConfig } from 'nuxt/app'
+
 interface WatchlistItem {
     symbol: string
     name: string
 }
 
 export const useWatchlist = () => {
-    // ✅ KORRIGIERT: Key + Factory-Funktion
+    const auth = useAuth()
+    const config = useRuntimeConfig()
+    const apiUrl = config.public.API_URL
     const watchlist = useState<WatchlistItem[]>('watchlist', () => [])
 
     const watchlistSymbols = computed(() =>
@@ -19,50 +25,109 @@ export const useWatchlist = () => {
         return watchlistSymbols.value.includes(stockSymbol)
     }
 
-    const addToWatchlist = (stock: { symbol: string; name: string }) => {
+    const loadWatchlist = async () => {
+        try {
+            const user = await auth.getUser()
+            const userId = user?.sub
+            if (!userId) {
+                console.error('Benutzer nicht authentifiziert')
+                return
+            }
+
+            // Watchlist-Daten laden
+            const res = await axios.get(`${apiUrl}/api/watchlist/${userId}`)
+            const watchlistData = res.data
+
+            // Alle verfügbaren Aktien laden
+            const allStocksRes = await axios.get(`${apiUrl}/api/stocks/all`)
+            const allStocks = Array.isArray(allStocksRes.data) ? allStocksRes.data : []
+
+            // Namen ergänzen
+            watchlist.value = watchlistData.map((item: { symbol: string }) => {
+                const stock = allStocks.find(s => s.symbol === item.symbol)
+                return {
+                    symbol: item.symbol,
+                    name: stock?.name || 'Unbekannt' // Fallback, falls kein Name gefunden wird
+                }
+            })
+
+            console.log(`📋 Watchlist geladen: ${watchlist.value.length} Einträge`)
+        } catch (error) {
+            console.error('Fehler beim Laden der Watchlist:', error)
+        }
+    }
+
+    const addToWatchlist = async (stock: { symbol: string; name: string }) => {
         if (isInWatchlist(stock.symbol)) {
             console.warn(`⚠️ ${stock.symbol} ist bereits in der Watchlist`)
             return
         }
 
-        watchlist.value.push({
-            symbol: stock.symbol,
-            name: stock.name
-        })
+        try {
+            const user = await auth.getUser()
+            const userId = user?.sub
+            if (!userId) {
+                console.error('Benutzer nicht authentifiziert')
+                return
+            }
 
-        console.log(`✅ ${stock.symbol} zur Watchlist hinzugefügt`)
+            await axios.post(`${apiUrl}/api/watchlist/${userId}`, { symbol: stock.symbol, name: stock.name })
+            watchlist.value.push({
+                symbol: stock.symbol,
+                name: stock.name
+            })
+            console.log(`✅ ${stock.symbol} zur Watchlist hinzugefügt`)
+        } catch (error) {
+            console.error(`❌ Fehler beim Hinzufügen von ${stock.symbol} zur Watchlist`, error)
+        }
     }
 
-    const removeFromWatchlist = (stockSymbol: string) => {
-        const index = watchlist.value.findIndex(
-            item => item.symbol === stockSymbol
-        )
-
+    const removeFromWatchlist = async (stockSymbol: string) => {
+        const index = watchlist.value.findIndex(item => item.symbol === stockSymbol)
         if (index === -1) {
             console.warn(`⚠️ ${stockSymbol} nicht in Watchlist gefunden`)
             return
         }
 
-        watchlist.value.splice(index, 1)
-        console.log(`❌ ${stockSymbol} aus Watchlist entfernt`)
-    }
+        try {
+            const user = await auth.getUser()
+            const userId = user?.sub
+            if (!userId) {
+                console.error('Benutzer nicht authentifiziert')
+                return
+            }
 
-    const toggleWatchlist = (stock: { symbol: string; name: string }) => {
-        if (isInWatchlist(stock.symbol)) {
-            removeFromWatchlist(stock.symbol)
-        } else {
-            addToWatchlist(stock)
+            await axios.delete(`${apiUrl}/api/watchlist/${userId}/${stockSymbol}`)
+            watchlist.value.splice(index, 1)
+            console.log(`❌ ${stockSymbol} aus Watchlist entfernt`)
+        } catch (error) {
+            console.error(`❌ Fehler beim Entfernen von ${stockSymbol} aus der Watchlist`, error)
         }
     }
 
-    const setWatchlist = (items: WatchlistItem[]) => {
-        watchlist.value = items
-        console.log(`📋 Watchlist geladen: ${items.length} Einträge`)
+    const toggleWatchlist = async (stock: { symbol: string; name: string }) => {
+        if (isInWatchlist(stock.symbol)) {
+            await removeFromWatchlist(stock.symbol)
+        } else {
+            await addToWatchlist(stock)
+        }
     }
 
-    const clearWatchlist = () => {
-        watchlist.value = []
-        console.log(`🗑️ Watchlist geleert`)
+    const clearWatchlist = async () => {
+        try {
+            const user = await auth.getUser()
+            const userId = user?.sub
+            if (!userId) {
+                console.error('Benutzer nicht authentifiziert')
+                return
+            }
+
+            await axios.delete(`${apiUrl}/api/watchlist/${userId}`)
+            watchlist.value = []
+            console.log(`🗑️ Watchlist geleert`)
+        } catch (error) {
+            console.error('Fehler beim Leeren der Watchlist:', error)
+        }
     }
 
     return {
@@ -70,10 +135,10 @@ export const useWatchlist = () => {
         watchlistSymbols,
         watchlistCount,
         isInWatchlist,
+        loadWatchlist,
         addToWatchlist,
         removeFromWatchlist,
         toggleWatchlist,
-        setWatchlist,
         clearWatchlist
     }
 }

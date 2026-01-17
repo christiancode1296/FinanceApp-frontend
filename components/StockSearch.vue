@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 import { useRuntimeConfig } from "nuxt/app"
+import { useAuth } from '@okta/okta-vue';
+import { useWatchlist } from '@/composables/useWatchlist'
 
 interface Stock {
   symbol: string
@@ -10,15 +12,30 @@ interface Stock {
   isFavorite?: boolean
 }
 
+const { loadWatchlist } = useWatchlist()
 const searchQuery = ref('')
 const allStocks = ref<Stock[]>([])
 const loading = ref(false)
 const config = useRuntimeConfig()
 const apiUrl = config.public.API_URL
+const auth = useAuth();
+const favorites = ref(new Set<string>());
 
+const loadFavorites = async () => {
+  const userId = auth.authState?.idToken?.claims?.sub; // Okta-User-ID
+  if (!userId) {
+    console.error('Benutzer nicht authentifiziert');
+    return;
+  }
 
-// Favoriten aus localStorage laden
-const favorites = ref<Set<string>>(new Set(JSON.parse(localStorage.getItem('watchlist') || '[]')))
+  try {
+    const res = await axios.get(`${apiUrl}/api/watchlist/${userId}`);
+    const symbols = res.data.map((item: { symbol: string }) => item.symbol);
+    favorites.value = new Set(symbols); // Watchlist aus Backend setzen
+  } catch (error) {
+    console.error('Fehler beim Laden der Watchlist:', error);
+  }
+};
 
 // Gefilterte Suchergebnisse
 const suggestions = computed(() => {
@@ -53,19 +70,35 @@ const loadAllStocks = async () => {
 }
 
 // Favorit togglen
-const toggleFavorite = (stock: Stock) => {
-  if (favorites.value.has(stock.symbol)) {
-    favorites.value.delete(stock.symbol)
-  } else {
-    favorites.value.add(stock.symbol)
+const toggleFavorite = async (stock: Stock) => {
+  const userId = auth.authState?.idToken?.claims?.sub;
+  if (!userId) {
+    console.error('Benutzer nicht authentifiziert');
+    return;
   }
 
-  // In localStorage speichern
-  localStorage.setItem('watchlist', JSON.stringify(Array.from(favorites.value)))
+  try {
+    if (favorites.value.has(stock.symbol)) {
+      console.log(`Entferne ${stock.symbol} aus der Watchlist`);
+      await axios.delete(`${apiUrl}/api/watchlist/${userId}/${stock.symbol}`);
+      favorites.value.delete(stock.symbol);
+    } else {
+      console.log(`Füge ${stock.symbol} zur Watchlist hinzu`);
+      await axios.post(`${apiUrl}/api/watchlist/${userId}`, { symbol: stock.symbol });
+      favorites.value.add(stock.symbol);
+    }
+    console.log('Aktualisierte Watchlist:', Array.from(favorites.value));
+  } catch (error) {
+    console.error('Fehler beim Aktualisieren der Watchlist:', error);
+  }
+};
 
-  // Event auslösen, damit Watchlist aktualisiert wird
-  window.dispatchEvent(new CustomEvent('watchlist-updated'))
-}
+onMounted(() => {
+  loadFavorites();
+});
+onMounted(async () => {
+  await loadWatchlist()
+})
 
 // Initial laden
 loadAllStocks()

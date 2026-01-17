@@ -172,11 +172,12 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed, watch } from "vue"
+import { useWatchlist } from '@/composables/useWatchlist'
 
 // ============================================================
 // State
 // ============================================================
-
+const { loadWatchlist } = useWatchlist()
 const symbol = useState('currentSymbol', () => "AAPL")
 const chartCanvas = ref(null)
 const errorMsg = ref("")
@@ -604,6 +605,7 @@ onMounted(async () => {
   await loadAllStocks()
   await fetchExchangeRate()
   await reload()
+  await loadWatchlist()
 
   const icon = infoIconRef.value?.querySelector('.group')
   if (icon) {
