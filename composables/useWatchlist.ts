@@ -97,13 +97,17 @@ export const useWatchlist = () => {
                 return
             }
 
+            console.log(`Sende DELETE-Anfrage an: ${apiUrl}/api/watchlist/${userId}/${stockSymbol}`)
+
             await axios.delete(`${apiUrl}/api/watchlist/${userId}/${stockSymbol}`)
             watchlist.value.splice(index, 1)
             console.log(`❌ ${stockSymbol} aus Watchlist entfernt`)
         } catch (error) {
-            console.error(`❌ Fehler beim Entfernen von ${stockSymbol} aus der Watchlist`, error)
+            // @ts-ignore
+            console.error('❌ Fehler beim Entfernen von', stockSymbol, error.response?.data || error)
         }
     }
+
 
     const toggleWatchlist = async (stock: { symbol: string; name: string }) => {
         if (isInWatchlist(stock.symbol)) {
