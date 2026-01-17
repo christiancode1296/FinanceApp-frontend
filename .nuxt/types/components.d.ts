@@ -17,7 +17,6 @@ interface _GlobalComponents {
   'Login': typeof import("../../components/Login.vue").default
   'StockCharts': typeof import("../../components/StockCharts.vue").default
   'StockSearch': typeof import("../../components/StockSearch.vue").default
-  'Test': typeof import("../../components/Test.vue").default
   'Watchlist': typeof import("../../components/Watchlist.vue").default
   'Welcome': typeof import("../../components/Welcome.vue").default
   'UColorModeAvatar': typeof import("../../node_modules/.pnpm/@nuxt+ui@4.3.0_@babel+parser@7.28.6_@floating-ui+dom@1.7.4_@tiptap+extension-drag-handl_fa62ce9140c4173c1e6a3b1a39f60ea5/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue").default
@@ -176,7 +175,6 @@ interface _GlobalComponents {
   'LazyLogin': LazyComponent<typeof import("../../components/Login.vue").default>
   'LazyStockCharts': LazyComponent<typeof import("../../components/StockCharts.vue").default>
   'LazyStockSearch': LazyComponent<typeof import("../../components/StockSearch.vue").default>
-  'LazyTest': LazyComponent<typeof import("../../components/Test.vue").default>
   'LazyWatchlist': LazyComponent<typeof import("../../components/Watchlist.vue").default>
   'LazyWelcome': LazyComponent<typeof import("../../components/Welcome.vue").default>
   'LazyUColorModeAvatar': LazyComponent<typeof import("../../node_modules/.pnpm/@nuxt+ui@4.3.0_@babel+parser@7.28.6_@floating-ui+dom@1.7.4_@tiptap+extension-drag-handl_fa62ce9140c4173c1e6a3b1a39f60ea5/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue").default>

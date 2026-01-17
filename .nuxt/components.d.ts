@@ -17,7 +17,6 @@ type LazyComponent<T> = DefineComponent<HydrationStrategies, {}, {}, {}, {}, {},
 export const Login: typeof import("../components/Login.vue").default
 export const StockCharts: typeof import("../components/StockCharts.vue").default
 export const StockSearch: typeof import("../components/StockSearch.vue").default
-export const Test: typeof import("../components/Test.vue").default
 export const Watchlist: typeof import("../components/Watchlist.vue").default
 export const Welcome: typeof import("../components/Welcome.vue").default
 export const UColorModeAvatar: typeof import("../node_modules/.pnpm/@nuxt+ui@4.3.0_@babel+parser@7.28.6_@floating-ui+dom@1.7.4_@tiptap+extension-drag-handl_fa62ce9140c4173c1e6a3b1a39f60ea5/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue").default
@@ -176,7 +175,6 @@ export const NuxtIsland: typeof import("../node_modules/.pnpm/nuxt@4.2.2_@parcel
 export const LazyLogin: LazyComponent<typeof import("../components/Login.vue").default>
 export const LazyStockCharts: LazyComponent<typeof import("../components/StockCharts.vue").default>
 export const LazyStockSearch: LazyComponent<typeof import("../components/StockSearch.vue").default>
-export const LazyTest: LazyComponent<typeof import("../components/Test.vue").default>
 export const LazyWatchlist: LazyComponent<typeof import("../components/Watchlist.vue").default>
 export const LazyWelcome: LazyComponent<typeof import("../components/Welcome.vue").default>
 export const LazyUColorModeAvatar: LazyComponent<typeof import("../node_modules/.pnpm/@nuxt+ui@4.3.0_@babel+parser@7.28.6_@floating-ui+dom@1.7.4_@tiptap+extension-drag-handl_fa62ce9140c4173c1e6a3b1a39f60ea5/node_modules/@nuxt/ui/dist/runtime/components/color-mode/ColorModeAvatar.vue").default>

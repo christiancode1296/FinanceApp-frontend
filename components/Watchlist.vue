@@ -244,7 +244,7 @@ const fetchExchangeRate = async () => {
 const fetchStockData = async (symbol) => {
   try {
     const config = useRuntimeConfig()
-    const apiUrl = config.public.API_URL || 'http://localhost:8080'
+    const apiUrl = config.public.NUXT_PUBLIC_API_URL || 'http://localhost:8080'
     const res = await fetch(`${apiUrl}/api/stocks/${encodeURIComponent(symbol)}`)
     if (!res.ok) throw new Error(`HTTP ${res.status}`)
     const data = await res.json()
